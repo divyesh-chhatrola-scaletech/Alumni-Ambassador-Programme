@@ -200,7 +200,8 @@ function Slide1() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
-          style={{ fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent-purple)', marginTop: '32px', marginBottom: '48px' }}
+          className="text-small-label"
+          style={{ marginTop: '32px', marginBottom: '48px' }}
         >
           Alumni Ambassador Programme
         </motion.div>
@@ -219,7 +220,8 @@ function Slide1() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
-          style={{ fontSize: '30px', fontWeight: 500, color: '#111111', maxWidth: '580px', marginBottom: '64px', lineHeight: 1.4 }}
+          className="text-subheading"
+          style={{ maxWidth: '580px', marginBottom: '64px' }}
         >
           Realise Value With AI
         </motion.p>
@@ -246,23 +248,10 @@ function Slide1() {
             maxWidth: '580px'
           }}
         >
-          <div style={{
-            fontSize: '14px',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.08em',
-            color: 'var(--accent-purple)',
-            marginBottom: '18px'
-          }}>
+          <div className="text-small-label" style={{ marginBottom: '18px' }}>
             VISION
           </div>
-          <p style={{
-            fontSize: '18px',
-            fontWeight: 400,
-            color: '#4a4a4a',
-            lineHeight: 1.65,
-            margin: 0
-          }}>
+          <p className="text-body">
             To create a pathway where learners don't just understand AI, they confidently explore, experiment, implement, and share AI solutions that create meaningful value for their organisations and communities.
           </p>
         </motion.div>
@@ -319,7 +308,7 @@ function Slide2() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
           style={{ marginBottom: '60px' }}
         >
-          <div style={{ fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--accent-purple)', marginBottom: '16px' }}>
+          <div className="text-small-label" style={{ marginBottom: '16px' }}>
             OUR FRAMEWORK
           </div>
           <h1 style={{ fontSize: '72px', lineHeight: 0.9, fontWeight: 900, textTransform: 'uppercase', color: '#111111', maxWidth: '520px', letterSpacing: '-0.04em', margin: 0 }}>
@@ -357,7 +346,7 @@ function Slide2() {
               </div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#111111', marginBottom: '8px' }}>01</div>
               <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#111111', marginBottom: '12px' }}>Value Discovery</h3>
-              <p style={{ fontSize: '14px', fontWeight: 400, color: '#4a4a4a', lineHeight: 1.5, margin: 0 }}>
+              <p className="text-card-desc">
                 Identify <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>business needs</span>, <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>pain points</span>, and <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>opportunities</span>.
               </p>
             </motion.div>
@@ -372,7 +361,7 @@ function Slide2() {
               </div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#111111', marginBottom: '8px' }}>02</div>
               <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#111111', marginBottom: '12px' }}>Opportunity Identification</h3>
-              <p style={{ fontSize: '14px', fontWeight: 400, color: '#4a4a4a', lineHeight: 1.5, margin: 0 }}>
+              <p className="text-card-desc">
                 Translate <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>insights</span> into <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>actionable opportunities</span> and <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>use cases</span>.
               </p>
             </motion.div>
@@ -389,7 +378,7 @@ function Slide2() {
               </div>
               <div style={{ fontSize: '14px', fontWeight: 600, color: '#111111', marginBottom: '8px' }}>03</div>
               <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#111111', marginBottom: '12px' }}>Implementation</h3>
-              <p style={{ fontSize: '14px', fontWeight: 400, color: '#4a4a4a', lineHeight: 1.5, margin: 0 }}>
+              <p className="text-card-desc">
                 Execute solutions using <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>AI</span>, <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>automation</span>, or <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>product development</span>.
               </p>
             </motion.div>
@@ -404,7 +393,7 @@ function Slide2() {
               <div style={{ fontSize: '18px', fontWeight: 700, color: '#111111', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
                 Agile Feedback Loop
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 500, color: '#4a4a4a' }}>
+              <div className="text-card-desc">
                 Continuously optimize based on <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>real-time feedback</span> and <span style={{ color: 'var(--accent-purple)', fontWeight: 700 }}>outcomes</span>.
               </div>
             </div>
@@ -488,7 +477,7 @@ function Slide3() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
           style={{ marginBottom: '100px' }}
         >
-          <div style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.08em', color: '#6E1EEF', marginBottom: '16px' }}>
+          <div className="text-small-label" style={{ marginBottom: '16px' }}>
             ToU PATHWAY
           </div>
           <h1 style={{ fontSize: '72px', lineHeight: 0.9, fontWeight: 900, textTransform: 'uppercase', color: '#111111', letterSpacing: '-0.04em', margin: 0 }}>
@@ -548,7 +537,7 @@ function Slide3() {
                 Awareness
               </motion.h2>
 
-              <motion.div variants={itemVariants} style={{ fontSize: '22px', fontWeight: 500, color: '#111111', marginBottom: '32px', lineHeight: 1.3 }}>
+              <motion.div variants={itemVariants} className="text-subheading" style={{ marginBottom: '32px' }}>
                 Building the right AI mindset
               </motion.div>
 
@@ -561,7 +550,7 @@ function Slide3() {
                 ].map((text, i) => (
                   <motion.li variants={itemVariants} key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                     <div style={{ marginTop: '8px', minWidth: '6px', height: '6px', background: '#6E1EEF', borderRadius: '50%' }}></div>
-                    <span style={{ fontSize: '18px', fontWeight: 400, color: '#111111', lineHeight: 1.65 }}>{text}</span>
+                    <span className="text-body">{text}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -593,7 +582,7 @@ function Slide3() {
                 Exploration
               </motion.h2>
 
-              <motion.div variants={itemVariants} style={{ fontSize: '22px', fontWeight: 500, color: '#111111', marginBottom: '32px', lineHeight: 1.3 }}>
+              <motion.div variants={itemVariants} className="text-subheading" style={{ marginBottom: '32px' }}>
                 Learning through experimentation
               </motion.div>
 
@@ -607,7 +596,7 @@ function Slide3() {
                 ].map((text, i) => (
                   <motion.li variants={itemVariants} key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                     <div style={{ marginTop: '8px', minWidth: '6px', height: '6px', background: '#6E1EEF', borderRadius: '50%' }}></div>
-                    <span style={{ fontSize: '18px', fontWeight: 400, color: '#111111', lineHeight: 1.65 }}>{text}</span>
+                    <span className="text-body">{text}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -639,7 +628,7 @@ function Slide3() {
                 Implementation
               </motion.h2>
 
-              <motion.div variants={itemVariants} style={{ fontSize: '22px', fontWeight: 500, color: '#111111', marginBottom: '32px', lineHeight: 1.3 }}>
+              <motion.div variants={itemVariants} className="text-subheading" style={{ marginBottom: '32px' }}>
                 Turning ideas into real impact
               </motion.div>
 
@@ -653,7 +642,7 @@ function Slide3() {
                 ].map((text, i) => (
                   <motion.li variants={itemVariants} key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                     <div style={{ marginTop: '8px', minWidth: '6px', height: '6px', background: '#6E1EEF', borderRadius: '50%' }}></div>
-                    <span style={{ fontSize: '18px', fontWeight: 400, color: '#111111', lineHeight: 1.65 }}>{text}</span>
+                    <span className="text-body">{text}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -698,7 +687,7 @@ function Slide4() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
           style={{ marginBottom: '24px' }}
         >
-          <div style={{ fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#6E1EEF', marginBottom: '16px' }}>
+          <div className="text-small-label" style={{ marginBottom: '16px' }}>
             COMMUNITY ACTIVITIES
           </div>
           <h1 style={{ fontSize: '56px', lineHeight: 0.9, fontWeight: 900, textTransform: 'uppercase', color: '#111111', letterSpacing: '-0.04em', margin: 0 }}>
@@ -727,7 +716,7 @@ function Slide4() {
                   {act.title}
                 </h3>
                 <div style={{ width: '24px', height: '1px', background: '#6E1EEF', marginBottom: '12px' }} />
-                <p style={{ fontSize: '14px', color: '#4a4a4a', fontWeight: 500, lineHeight: 1.4, margin: 0, paddingRight: '12px' }}>
+                <p className="text-card-desc" style={{ paddingRight: '12px' }}>
                   {act.desc}
                 </p>
               </motion.div>
@@ -793,13 +782,13 @@ function Slide5() {
                 <div style={{ marginTop: '6px' }}>
                   <ArrowRight size={16} color="var(--accent-purple)" />
                 </div>
-                <span style={{ fontSize: '20px', color: '#111111', fontWeight: 500 }}>{text}</span>
+                <span className="text-body">{text}</span>
               </motion.li>
             ))}
           </ul>
 
           <div style={{ marginTop: '60px', paddingTop: '40px', borderTop: '1px solid #e5e5e5' }}>
-            <div style={{ fontSize: '14px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#808080', marginBottom: '16px' }}>
+            <div className="text-small-label" style={{ marginBottom: '16px' }}>
               THE JOURNEY
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
