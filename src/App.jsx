@@ -319,8 +319,8 @@ function Slide2() {
         {/* Bottom Section (Cards + Feedback on left, Video on right) */}
         <div style={{ display: 'flex', gap: '60px' }}>
           
-          {/* Left Side (70%) */}
-          <div style={{ flex: '0 0 calc(70% - 30px)', display: 'flex', flexDirection: 'column' }}>
+          {/* Left Side (60%) */}
+          <div style={{ flex: '0 0 calc(60% - 30px)', display: 'flex', flexDirection: 'column' }}>
             {/* Lifecycle Area */}
             <motion.div
               variants={containerVariants}
@@ -414,7 +414,11 @@ function Slide2() {
                 borderRadius: '4px', 
                 overflow: 'hidden', 
                 boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-                border: '2px solid #ffffff'
+                border: '2px solid #ffffff',
+                backgroundColor: '#000000',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               <video
@@ -423,7 +427,7 @@ function Slide2() {
                 loop
                 muted
                 playsInline
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
             </motion.div>
           </div>
