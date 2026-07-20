@@ -137,6 +137,35 @@ export default function App() {
 }
 
 function Slide1() {
+  const [activeOverlaySlide, setActiveOverlaySlide] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const overlaySlides = [
+    {
+      label: '01',
+      headline: 'Knowledge and training gaps remain the biggest barriers to AI-driven value.',
+      body: "According to McKinsey's State of AI Trust 2026, nearly 60% of organisations say knowledge and training gaps are the biggest barriers standing between them and real AI-driven value. That percentage was roughly 50% just a year ago, highlighting that while AI tools continue to evolve rapidly, organisational readiness is struggling to keep pace.",
+    },
+    {
+      label: '02',
+      headline: "The difference isn't the AI tool. It's how the tool gets used.",
+      body: "Most organisations today have access to broadly similar AI technologies. What separates businesses creating real impact is not the tool itself, but the depth of understanding behind how that tool is applied to solve meaningful business challenges.",
+    },
+    {
+      label: '03',
+      headline: 'Business outcomes should guide AI adoption.',
+      body: "According to Gartner, many AI initiatives fail not because the technology doesn't work, but because they are never tied to the business capabilities that drive value. AI creates measurable impact when implementation is aligned with strategic business outcomes from the very beginning.",
+    }
+  ];
+
+  useEffect(() => {
+    if (isHovered) return;
+    const interval = setInterval(() => {
+      setActiveOverlaySlide((prev) => (prev + 1) % overlaySlides.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [isHovered, overlaySlides.length]);
+
   const bubbleVariants = {
     animate: (i) => ({
       y: ['110vh', '-20vh'],
@@ -210,20 +239,18 @@ function Slide1() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
-          style={{ fontSize: '79px', lineHeight: 1.1, fontWeight: 900, textTransform: 'uppercase', color: '#111111', marginBottom: '64px', letterSpacing: '-0.04em' }}
+          style={{ fontSize: '79px', lineHeight: 1.1, fontWeight: 900, textTransform: 'uppercase', color: '#111111', marginBottom: '16px', letterSpacing: '-0.04em' }}
         >
-          AI &<br />TECHNOLOGY<br />
-          <span style={{ fontSize: '83px', color: 'var(--accent-purple)' }}>PATHWAY</span>
+          Realise <span style={{ color: 'var(--accent-purple)' }}>Value</span> With AI
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
-          className="text-subheading"
-          style={{ maxWidth: '580px', marginBottom: '64px' }}
+          style={{ maxWidth: '580px', marginBottom: '64px', fontSize: '20px', color: '#2F2F2F', fontWeight: 500 }}
         >
-          Realise Value With AI
+          AI & Technology Pathway
         </motion.p>
 
         {/* Horizontal divider above Our Vision — full width, extending out of padding */}
@@ -248,11 +275,11 @@ function Slide1() {
             maxWidth: '580px'
           }}
         >
-          <div className="text-small-label" style={{ marginBottom: '18px' }}>
+          <div className="text-small-label">
             VISION
           </div>
           <p className="text-body">
-            To create a pathway where learners don't just understand AI, they confidently explore, experiment, implement, and share AI solutions that create meaningful value for their organisations and communities.
+            To enable learners to explore, experiment, implement AI integrated solution that create meaningful value for their organisations.
           </p>
         </motion.div>
       </div>
@@ -267,6 +294,112 @@ function Slide1() {
           playsInline
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
+        
+        {/* Dark Gradient Overlay */}
+        <div style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0, bottom: 0,
+          background: 'linear-gradient(to right, rgba(10,10,15,0.82) 0%, rgba(10,10,15,0.55) 50%, rgba(10,10,15,0.25) 100%)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          pointerEvents: 'none',
+          zIndex: 1
+        }} />
+
+        {/* Carousel Container */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0, left: 0, right: 0, bottom: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            padding: '90px 90px 90px 70px',
+            zIndex: 2
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <div style={{ maxWidth: '520px', position: 'relative' }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeOverlaySlide}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
+              >
+                <div style={{ 
+                  fontFamily: 'GT America Mono, monospace', 
+                  fontSize: '14px', 
+                  letterSpacing: '2px', 
+                  color: '#6F3FF5', 
+                  marginBottom: '24px' 
+                }}>
+                  {overlaySlides[activeOverlaySlide].label}
+                </div>
+                
+                <h2 style={{ 
+                  fontFamily: 'GT America Bold, sans-serif', 
+                  fontSize: '30px', 
+                  color: 'white', 
+                  lineHeight: 1.15,
+                  letterSpacing: '-0.02em',
+                  maxWidth: '480px',
+                  marginBottom: '24px',
+                  fontWeight: 'bold',
+                  textTransform: 'initial'
+                }}>
+                  {overlaySlides[activeOverlaySlide].headline}
+                </h2>
+                
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.15, duration: 0.5, ease: [0.215, 0.61, 0.355, 1] }}
+                  style={{ 
+                    fontFamily: 'GT America Regular, sans-serif', 
+                    fontSize: '14px', 
+                    color: 'rgba(255,255,255,0.88)', 
+                    lineHeight: 1.6,
+                    maxWidth: '470px'
+                  }}
+                >
+                  {overlaySlides[activeOverlaySlide].body}
+                </motion.p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Bottom Indicator */}
+        <div style={{
+          position: 'absolute',
+          bottom: '40px',
+          left: '70px',
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'center',
+          fontFamily: 'GT America Mono, monospace',
+          fontSize: '18px',
+          fontWeight: 'bold',
+          letterSpacing: '2px',
+          zIndex: 2
+        }}>
+          {overlaySlides.map((slide, index) => (
+            <React.Fragment key={slide.label}>
+              <motion.span
+                animate={{ color: activeOverlaySlide === index ? '#6F3FF5' : 'rgba(255,255,255,0.7)' }}
+                transition={{ duration: 0.3 }}
+              >
+                {slide.label}
+              </motion.span>
+              {index < overlaySlides.length - 1 && (
+                <span style={{ color: 'rgba(255,255,255,0.7)' }}>—</span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
 
     </div>
