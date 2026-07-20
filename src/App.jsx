@@ -81,7 +81,12 @@ export default function App() {
             transition={{ duration: 0.8 }}
             style={{ display: 'flex', alignItems: 'flex-end', gap: '56px' }}
           >
-            <img src="/tou-logo.svg" alt="Tomorrow University Logo" style={{ height: '62px', objectFit: 'contain' }} />
+            <img 
+              src="/tou-logo.svg" 
+              alt="Tomorrow University Logo" 
+              style={{ height: '62px', objectFit: 'contain', cursor: 'pointer' }}
+              onClick={() => setCurrentSlide(0)}
+            />
           </motion.div>
 
           <motion.div
