@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowRight, Video, Image as ImageIcon, Search, Lightbulb, Settings, RefreshCcw, ChevronUp, ChevronDown, Compass, Rocket, Users, Bot, MessageSquare, Book, Presentation
+  ArrowRight, Video, Image as ImageIcon, Search, Lightbulb, Settings, RefreshCcw, ChevronUp, ChevronDown, Compass, Rocket, Users, Bot, MessageSquare, Book, Presentation, CheckCircle
 } from 'lucide-react';
 import './index.css';
 import './App.css';
+import AssessmentOverlay from './Assessment';
 
 const slides = [
   { id: 1 },
@@ -51,6 +52,7 @@ const ResponsiveWrapper = ({ children }) => {
 
 export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAssessmentOpen, setIsAssessmentOpen] = useState(false);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev === slides.length - 1 ? prev : prev + 1));
@@ -110,7 +112,7 @@ export default function App() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}
             >
-              {currentSlide === 0 && <Slide1 />}
+              {currentSlide === 0 && <Slide1 onOpenAssessment={() => setIsAssessmentOpen(true)} />}
               {currentSlide === 1 && <Slide2 />}
               {currentSlide === 2 && <Slide3 />}
               {currentSlide === 3 && <Slide4 />}
@@ -136,12 +138,16 @@ export default function App() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
           </button>
         </footer>
+
+        <AnimatePresence>
+          {isAssessmentOpen && <AssessmentOverlay onClose={() => setIsAssessmentOpen(false)} />}
+        </AnimatePresence>
       </div>
     </ResponsiveWrapper>
   );
 }
 
-function Slide1() {
+function Slide1({ onOpenAssessment }) {
   const [activeOverlaySlide, setActiveOverlaySlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -228,7 +234,7 @@ function Slide1() {
       </div>
 
       {/* Left Content Area (46%) — single editorial column, vertically centred below the header */}
-      <div style={{ width: '46%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '92px 60px 40px 80px', zIndex: 3 }}>
+      <div style={{ width: '46%', height: '100%', position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '92px 60px 40px 80px', zIndex: 3 }}>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -287,6 +293,43 @@ function Slide1() {
             To enable learners to explore, experiment, implement AI integrated solution that create meaningful value for their organisations.
           </p>
         </motion.div>
+
+        <div style={{ position: 'absolute', bottom: '60px', left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
+          <motion.button
+            onClick={onOpenAssessment}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.1 }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '52px',
+              padding: '18px 32px',
+              borderRadius: '0px',
+              background: '#6C3BFF',
+              color: 'white',
+              fontSize: '18px',
+              fontWeight: 600,
+              textDecoration: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 10px 30px rgba(108,59,255,0.18)',
+              transition: 'all 250ms ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#5A2EF5';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#6C3BFF';
+              e.currentTarget.style.transform = 'translateY(0)';
+            }}
+            aria-label="Start AI Value Assessment"
+          >
+            Start AI Value Assessment
+          </motion.button>
+        </div>
       </div>
 
       {/* Right Media Area (54%) — clean full-height canvas, edge-to-edge, no dividers over it */}
