@@ -156,29 +156,28 @@ export default function AssessmentOverlay({ onClose }) {
         display: 'flex',
         alignItems: 'center',
         padding: '0 60px',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         borderBottom: currentStep > 0 && currentStep < 12 ? '1px solid #EAEAEA' : 'none'
       }}>
         {currentStep > 0 && currentStep < 12 && (
-          <>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: '#111111' }}>
-              {currentStep <= totalQuestions ? `Question ${currentStep} of ${totalQuestions}` : (currentStep === 11 ? 'Contact Details' : '')}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', width: '100%', maxWidth: '500px' }}>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#111111', whiteSpace: 'nowrap' }}>
+              {currentStep <= totalQuestions ? 'Question' : 'Contact Details'}
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flex: 1, maxWidth: '400px', marginLeft: 'auto' }}>
-              <div style={{ flex: 1, height: '4px', backgroundColor: '#F2F2F2', borderRadius: '2px', overflow: 'hidden' }}>
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.5, ease: 'easeInOut' }}
-                  style={{ height: '100%', backgroundColor: '#6C3BFF' }}
-                />
-              </div>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: '#111111', width: '40px', textAlign: 'right' }}>
-                {Math.round(progress)}%
-              </div>
+            <div style={{ flex: 1, height: '4px', backgroundColor: '#F2F2F2', borderRadius: '2px', overflow: 'hidden' }}>
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                style={{ height: '100%', backgroundColor: '#6C3BFF' }}
+              />
             </div>
-          </>
+            
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#111111', width: '40px', textAlign: 'right' }}>
+              {Math.round(progress)}%
+            </div>
+          </div>
         )}
       </header>
 
