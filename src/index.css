@@ -157,3 +157,13 @@ button {
   color: #2F2F2F;
   margin-top: 20px;
 }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+

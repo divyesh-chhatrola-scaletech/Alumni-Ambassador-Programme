@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, ArrowRight, ArrowLeft } from 'lucide-react';
+import { CheckCircle, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
+import { submitAssessment } from './excelStore';
 
 const questions = [
   {
@@ -17,25 +18,33 @@ const questions = [
   },
   {
     id: 3,
-    type: 'single',
+    type: 'multiple',
+    maxSelect: 3,
+    subtitle: "Select up to 3 options",
     question: "How would you describe your current relationship with AI?",
     options: ["I am curious and exploring what is possible", "I use AI occasionally in my day-to-day work", "I use AI regularly in my work", "I experiment with AI for specific business or professional needs", "AI is already part of initiatives within my organisation", "I am actively working on AI implementation", "Not yet explored"]
   },
   {
     id: 4,
-    type: 'single',
+    type: 'multiple',
+    maxSelect: 3,
+    subtitle: "Select up to 3 options",
     question: "Where do you currently see the most room for improvement in your work or organisation?",
     options: ["My own productivity and workload", "Team collaboration and ways of working", "Operations and processes", "Customer, member or user experience", "Products or services", "Decision-making and analysis", "Knowledge and information", "Innovation and new opportunities", "I am not sure yet", "Other"]
   },
   {
     id: 5,
-    type: 'single',
+    type: 'multiple',
+    maxSelect: 3,
+    subtitle: "Select up to 3 options",
     question: "Where would you most like to create more time, capacity or opportunity?",
     options: ["Focusing on higher-value work", "Spending more time with customers, members or users", "Supporting and developing people", "Working on strategy and important decisions", "Creating or improving products/services", "Exploring new ideas and opportunities", "Improving how the organisation operates", "I am not sure yet", "Other"]
   },
   {
     id: 6,
-    type: 'single',
+    type: 'multiple',
+    maxSelect: 3,
+    subtitle: "Select up to 3 options",
     question: "What usually gets in the way when you want to improve something in your work or organisation?",
     options: ["Not knowing where to start", "Finding the right approach", "Lack of time", "Lack of skills or expertise", "Getting others on board", "Cost or resources", "Data, privacy or security concerns", "Not seeing a clear enough benefit", "Nothing significant at the moment", "Other"]
   },
@@ -70,7 +79,10 @@ export default function AssessmentOverlay({ onClose }) {
   // 0: Intro, 1-10: Questions, 11: Contact, 12: Thank You
   
   const [answers, setAnswers] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [otherAnswers, setOtherAnswers] = useState({});
   const [contactInfo, setContactInfo] = useState({ name: '', email: '', company: '', linkedin: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Calculate progress for steps 1 to 10
   const totalQuestions = questions.length;
@@ -85,17 +97,51 @@ export default function AssessmentOverlay({ onClose }) {
   let nextDisabled = false;
   if (currentStep > 0 && currentStep <= totalQuestions) {
     const q = questions[currentStep - 1];
-    if (q.type === 'single' && !answers[q.id]) nextDisabled = true;
-    if (q.type === 'long-text' && (!answers[q.id] || answers[q.id].trim() === '')) nextDisabled = true;
+    if (q.type === 'single') {
+      const selected = selectedOptions[q.id];
+      if (!selected) {
+        nextDisabled = true;
+      } else if (selected === 'Other') {
+        if (!otherAnswers[q.id] || !otherAnswers[q.id].trim()) {
+          nextDisabled = true;
+        }
+      }
+    } else if (q.type === 'multiple') {
+      const selectedList = Array.isArray(selectedOptions[q.id]) ? selectedOptions[q.id] : [];
+      if (selectedList.length === 0) {
+        nextDisabled = true;
+      } else if (selectedList.includes('Other')) {
+        if (!otherAnswers[q.id] || !otherAnswers[q.id].trim()) {
+          nextDisabled = true;
+        }
+      }
+    } else if (q.type === 'long-text') {
+      if (!answers[q.id] || !answers[q.id].trim()) nextDisabled = true;
+    }
   }
+  const isValidUrl = (urlStr) => {
+    if (!urlStr || !urlStr.trim()) return true;
+    const trimmed = urlStr.trim();
+    try {
+      const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+      const parsed = new URL(withProtocol);
+      return parsed.hostname.includes('.') && parsed.hostname.split('.').every(part => part.length > 0);
+    } catch {
+      return false;
+    }
+  };
+
   if (currentStep === 11) {
     if (!contactInfo.name.trim() || !contactInfo.email.trim()) nextDisabled = true;
+    if (contactInfo.linkedin.trim() && !isValidUrl(contactInfo.linkedin)) nextDisabled = true;
   }
+
+  const isButtonDisabled = nextDisabled || isSubmitting;
 
   // Handle Enter key for proceeding if not disabled (and not in long text where enter is newline)
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Enter' && !nextDisabled && currentStep > 0 && currentStep <= 11) {
+      if (e.key === 'Enter' && !isButtonDisabled && currentStep > 0 && currentStep <= 11) {
         const q = questions[currentStep - 1];
         // Allow newline in textarea instead of submitting, unless they use ctrl/cmd+enter
         if (q && q.type === 'long-text' && !e.metaKey && !e.ctrlKey) return;
@@ -107,10 +153,22 @@ export default function AssessmentOverlay({ onClose }) {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nextDisabled, currentStep, contactInfo]);
+  }, [isButtonDisabled, currentStep, contactInfo]);
 
-  const handleNext = () => {
-    if (!nextDisabled) {
+  const handleNext = async () => {
+    if (isButtonDisabled) return;
+
+    if (currentStep === 11) {
+      setIsSubmitting(true);
+      try {
+        await submitAssessment(answers, contactInfo, questions);
+      } catch (error) {
+        console.error("Submission error:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+      setCurrentStep(prev => prev + 1);
+    } else {
       setCurrentStep(prev => prev + 1);
     }
   };
@@ -121,7 +179,54 @@ export default function AssessmentOverlay({ onClose }) {
     }
   };
 
-  const setAnswer = (questionId, value) => {
+  const handleSelectOption = (questionId, opt, type, maxSelect = 3) => {
+    if (type === 'multiple') {
+      const currentSelected = Array.isArray(selectedOptions[questionId]) ? selectedOptions[questionId] : [];
+      let newSelected;
+      if (currentSelected.includes(opt)) {
+        newSelected = currentSelected.filter(item => item !== opt);
+      } else {
+        if (currentSelected.length >= maxSelect) {
+          return;
+        }
+        newSelected = [...currentSelected, opt];
+      }
+      setSelectedOptions(prev => ({ ...prev, [questionId]: newSelected }));
+
+      const text = (otherAnswers[questionId] || '').trim();
+      const formattedAnswers = newSelected.map(item => {
+        if (item === 'Other') return text ? `Other: ${text}` : 'Other';
+        return item;
+      });
+      setAnswers(prev => ({ ...prev, [questionId]: formattedAnswers }));
+    } else {
+      setSelectedOptions(prev => ({ ...prev, [questionId]: opt }));
+      if (opt === 'Other') {
+        const text = (otherAnswers[questionId] || '').trim();
+        setAnswers(prev => ({ ...prev, [questionId]: text ? `Other: ${text}` : '' }));
+      } else {
+        setAnswers(prev => ({ ...prev, [questionId]: opt }));
+      }
+    }
+  };
+
+  const handleOtherTextChange = (questionId, text, type) => {
+    setOtherAnswers(prev => ({ ...prev, [questionId]: text }));
+    const trimmedText = text.trim();
+
+    if (type === 'multiple') {
+      const currentSelected = Array.isArray(selectedOptions[questionId]) ? selectedOptions[questionId] : [];
+      const formattedAnswers = currentSelected.map(item => {
+        if (item === 'Other') return trimmedText ? `Other: ${trimmedText}` : 'Other';
+        return item;
+      });
+      setAnswers(prev => ({ ...prev, [questionId]: formattedAnswers }));
+    } else {
+      setAnswers(prev => ({ ...prev, [questionId]: trimmedText ? `Other: ${trimmedText}` : '' }));
+    }
+  };
+
+  const handleTextChange = (questionId, value) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
@@ -235,41 +340,97 @@ export default function AssessmentOverlay({ onClose }) {
           {/* STEPS 1-10: Questions */}
           {currentStep > 0 && currentStep <= totalQuestions && (
             <motion.div key={`q-${currentStep}`} variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', width: '100%', maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ fontSize: '42px', fontWeight: 700, color: '#111111', lineHeight: 1.2, letterSpacing: '-0.01em', marginBottom: '48px', flexShrink: 0 }}>
+              <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#111111', lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: questions[currentStep - 1].subtitle ? '8px' : '32px', flexShrink: 0 }}>
                 {questions[currentStep - 1].question}
               </h2>
+
+              {questions[currentStep - 1].subtitle && (
+                <div style={{ fontSize: '15px', fontWeight: 600, color: '#6C3BFF', marginBottom: '24px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span>{questions[currentStep - 1].subtitle}</span>
+                  <span style={{ fontSize: '13px', color: '#666666', fontWeight: 500, backgroundColor: '#F5F3FF', padding: '2px 10px', borderRadius: '12px', border: '1px solid #EAE6FF' }}>
+                    {(selectedOptions[questions[currentStep - 1].id] || []).length} / {questions[currentStep - 1].maxSelect || 3} selected
+                  </span>
+                </div>
+              )}
               
-              {questions[currentStep - 1].type === 'single' && (
+              {(questions[currentStep - 1].type === 'single' || questions[currentStep - 1].type === 'multiple') && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto', flexShrink: 1, minHeight: 0, paddingRight: '8px', paddingBottom: '16px' }}>
                   {questions[currentStep - 1].options.map((opt, idx) => {
-                    const isSelected = answers[questions[currentStep - 1].id] === opt;
+                    const currentQ = questions[currentStep - 1];
+                    const qId = currentQ.id;
+                    const isMultiple = currentQ.type === 'multiple';
+                    const maxSelect = currentQ.maxSelect || 3;
+                    
+                    const isSelected = isMultiple
+                      ? Array.isArray(selectedOptions[qId]) && selectedOptions[qId].includes(opt)
+                      : selectedOptions[qId] === opt;
+                      
+                    const isOther = opt === 'Other';
+                    const currentCount = Array.isArray(selectedOptions[qId]) ? selectedOptions[qId].length : 0;
+                    const isMaxReached = isMultiple && !isSelected && currentCount >= maxSelect;
+
                     return (
-                      <motion.button
-                        key={idx}
-                        onClick={() => setAnswer(questions[currentStep - 1].id, opt)}
-                        whileHover={{ scale: 1.01, backgroundColor: isSelected ? '#F5F3FF' : '#FAFAFA' }}
-                        whileTap={{ scale: 0.99 }}
-                        style={{
-                          textAlign: 'left',
-                          width: '100%',
-                          padding: '24px 32px',
-                          backgroundColor: isSelected ? '#F5F3FF' : '#ffffff',
-                          border: isSelected ? '2px solid #6C3BFF' : '1px solid #EAEAEA',
-                          borderRadius: '0px',
-                          fontSize: '18px',
-                          fontWeight: 'normal',
-                          color: isSelected ? '#6C3BFF' : '#2F2F2F',
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between'
-                        }}
-                      >
-                        {opt}
-                        {isSelected && <CheckCircle size={20} color="#6C3BFF" />}
-                      </motion.button>
-                    )
+                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+                        <motion.button
+                          onClick={() => handleSelectOption(qId, opt, currentQ.type, maxSelect)}
+                          whileHover={{ scale: isMaxReached ? 1 : 1.005, backgroundColor: isSelected ? '#F5F3FF' : (isMaxReached ? '#FAFAFA' : '#FAFAFA') }}
+                          whileTap={{ scale: isMaxReached ? 1 : 0.995 }}
+                          style={{
+                            textAlign: 'left',
+                            width: '100%',
+                            padding: '24px 32px',
+                            backgroundColor: isSelected ? '#F5F3FF' : '#ffffff',
+                            border: isSelected ? '2px solid #6C3BFF' : '1px solid #EAEAEA',
+                            borderRadius: '0px',
+                            fontSize: '18px',
+                            fontWeight: 'normal',
+                            color: isSelected ? '#6C3BFF' : (isMaxReached ? '#999999' : '#2F2F2F'),
+                            cursor: isMaxReached ? 'not-allowed' : 'pointer',
+                            opacity: isMaxReached ? 0.65 : 1,
+                            transition: 'all 0.2s ease',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                          }}
+                        >
+                          {opt}
+                          {isSelected && <CheckCircle size={20} color="#6C3BFF" />}
+                        </motion.button>
+
+                        <AnimatePresence>
+                          {isOther && isSelected && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.25, ease: 'easeOut' }}
+                              style={{ overflow: 'hidden' }}
+                            >
+                              <input
+                                type="text"
+                                autoFocus
+                                placeholder="Please specify your answer..."
+                                value={otherAnswers[qId] || ''}
+                                onChange={(e) => handleOtherTextChange(qId, e.target.value, currentQ.type)}
+                                style={{
+                                  width: '100%',
+                                  height: '56px',
+                                  padding: '0 24px',
+                                  backgroundColor: '#FAFAFA',
+                                  border: '2px solid #6C3BFF',
+                                  borderRadius: '0px',
+                                  fontSize: '18px',
+                                  fontFamily: 'inherit',
+                                  color: '#111111',
+                                  outline: 'none',
+                                  boxShadow: '0 0 0 4px rgba(108,59,255,0.1)'
+                                }}
+                              />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
                   })}
                 </div>
               )}
@@ -277,7 +438,7 @@ export default function AssessmentOverlay({ onClose }) {
               {questions[currentStep - 1].type === 'long-text' && (
                 <textarea
                   value={answers[questions[currentStep - 1].id] || ''}
-                  onChange={(e) => setAnswer(questions[currentStep - 1].id, e.target.value)}
+                  onChange={(e) => handleTextChange(questions[currentStep - 1].id, e.target.value)}
                   placeholder={questions[currentStep - 1].placeholder}
                   style={{
                     width: '100%',
@@ -309,7 +470,7 @@ export default function AssessmentOverlay({ onClose }) {
           {/* STEP 11: Contact Details */}
           {currentStep === 11 && (
             <motion.div key="contact" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', width: '100%', maxHeight: '100%', overflowY: 'auto', paddingRight: '8px', paddingBottom: '16px' }}>
-              <h2 style={{ fontSize: '42px', fontWeight: 700, color: '#111111', lineHeight: 1.2, letterSpacing: '-0.01em', marginBottom: '16px' }}>
+              <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#111111', lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: '16px' }}>
                 Almost done
               </h2>
               <p style={{ fontSize: '18px', color: '#555555', marginBottom: '48px' }}>
@@ -357,10 +518,25 @@ export default function AssessmentOverlay({ onClose }) {
                     placeholder="https://linkedin.com/in/..."
                     value={contactInfo.linkedin}
                     onChange={(e) => setContactInfo(prev => ({...prev, linkedin: e.target.value}))}
-                    style={inputStyle}
+                    style={{
+                      ...inputStyle,
+                      borderColor: (contactInfo.linkedin.trim() !== '' && !isValidUrl(contactInfo.linkedin)) ? '#E53E3E' : '#EAEAEA'
+                    }}
                     onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
+                    onBlur={(e) => {
+                      if (contactInfo.linkedin.trim() !== '' && !isValidUrl(contactInfo.linkedin)) {
+                        e.currentTarget.style.borderColor = '#E53E3E';
+                        e.currentTarget.style.boxShadow = '0 0 0 4px rgba(229,62,62,0.1)';
+                      } else {
+                        handleInputBlur(e);
+                      }
+                    }}
                   />
+                  {contactInfo.linkedin.trim() !== '' && !isValidUrl(contactInfo.linkedin) && (
+                    <div style={{ color: '#E53E3E', fontSize: '13px', marginTop: '6px', fontWeight: 500 }}>
+                      Please enter a valid link (e.g. https://linkedin.com/in/username)
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -433,21 +609,29 @@ export default function AssessmentOverlay({ onClose }) {
 
           <motion.button
             onClick={handleNext}
-            disabled={nextDisabled}
-            variants={!nextDisabled ? buttonVariants : {}}
-            whileHover={!nextDisabled ? "hover" : ""}
+            disabled={isButtonDisabled}
+            variants={!isButtonDisabled ? buttonVariants : {}}
+            whileHover={!isButtonDisabled ? "hover" : ""}
             style={{
-              backgroundColor: nextDisabled ? '#EAEAEA' : '#6C3BFF', 
-              color: nextDisabled ? '#A0A0A0' : '#ffffff',
+              backgroundColor: isButtonDisabled ? '#EAEAEA' : '#6C3BFF', 
+              color: isButtonDisabled ? '#A0A0A0' : '#ffffff',
               border: 'none', borderRadius: '0px',
               height: '52px', padding: '0 32px',
               fontSize: '18px', fontWeight: 600,
-              cursor: nextDisabled ? 'not-allowed' : 'pointer', 
+              cursor: isButtonDisabled ? 'not-allowed' : 'pointer', 
               display: 'flex', alignItems: 'center', gap: '12px',
               transition: 'background-color 0.3s ease, color 0.3s ease'
             }}
           >
-            {currentStep === 11 ? 'Finish' : 'Next'} {currentStep !== 11 && <ArrowRight size={20} />}
+            {isSubmitting ? (
+              <>
+                <Loader2 size={20} className="spin-icon" /> Submitting...
+              </>
+            ) : (
+              <>
+                {currentStep === 11 ? 'Finish' : 'Next'} {currentStep !== 11 && <ArrowRight size={20} />}
+              </>
+            )}
           </motion.button>
         </footer>
       )}
