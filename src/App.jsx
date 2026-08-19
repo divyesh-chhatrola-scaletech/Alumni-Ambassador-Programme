@@ -134,6 +134,7 @@ export default function App() {
               fontWeight: 600,
               color: "#111111",
               letterSpacing: "0.05em",
+              display: "none", // Temporarily hidden
             }}
           >
             {String(currentSlide + 1).padStart(2, "0")} /{" "}
@@ -183,7 +184,7 @@ export default function App() {
             bottom: 40,
             right: 60,
             zIndex: 50,
-            display: "flex",
+            display: "none", // Temporarily hidden (was "flex")
             gap: 0,
           }}
         >
