@@ -345,7 +345,7 @@ export default function AssessmentOverlay({ onClose }) {
               </h2>
 
               {questions[currentStep - 1].subtitle && (
-                <div style={{ fontSize: '15px', fontWeight: 600, color: '#6C3BFF', marginBottom: '24px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ fontSize: '15px', fontWeight: 600, color: '#777777', marginBottom: '24px', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span>{questions[currentStep - 1].subtitle}</span>
                   <span style={{ fontSize: '13px', color: '#666666', fontWeight: 500, backgroundColor: '#F5F3FF', padding: '2px 10px', borderRadius: '12px', border: '1px solid #EAE6FF' }}>
                     {(selectedOptions[questions[currentStep - 1].id] || []).length} / {questions[currentStep - 1].maxSelect || 3} selected
@@ -373,21 +373,28 @@ export default function AssessmentOverlay({ onClose }) {
                       <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
                         <motion.button
                           onClick={() => handleSelectOption(qId, opt, currentQ.type, maxSelect)}
-                          whileHover={{ scale: isMaxReached ? 1 : 1.005, backgroundColor: isSelected ? '#F5F3FF' : (isMaxReached ? '#FAFAFA' : '#FAFAFA') }}
-                          whileTap={{ scale: isMaxReached ? 1 : 0.995 }}
+                          whileHover={!isMaxReached ? {
+                            backgroundColor: isSelected ? '#F4F0FF' : '#FAF8FF',
+                            boxShadow: isSelected
+                              ? 'inset 0 0 0 1px #6C3BFF'
+                              : 'inset 0 0 0 1px #CFC2FF'
+                          } : {}}
+                          whileTap={!isMaxReached ? { scale: 0.998 } : {}}
                           style={{
                             textAlign: 'left',
                             width: '100%',
+                            boxSizing: 'border-box',
                             padding: '24px 32px',
-                            backgroundColor: isSelected ? '#F5F3FF' : '#ffffff',
-                            border: isSelected ? '2px solid #6C3BFF' : '1px solid #EAEAEA',
+                            backgroundColor: isSelected ? '#F4F0FF' : '#ffffff',
+                            border: '1px solid #EAEAEA',
+                            boxShadow: isSelected ? 'inset 0 0 0 1px #6C3BFF' : 'none',
                             borderRadius: '0px',
                             fontSize: '18px',
                             fontWeight: 'normal',
                             color: isSelected ? '#6C3BFF' : (isMaxReached ? '#999999' : '#2F2F2F'),
                             cursor: isMaxReached ? 'not-allowed' : 'pointer',
                             opacity: isMaxReached ? 0.65 : 1,
-                            transition: 'all 0.2s ease',
+                            transition: 'background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between'
@@ -473,9 +480,11 @@ export default function AssessmentOverlay({ onClose }) {
               <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#111111', lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: '16px' }}>
                 Almost done
               </h2>
+              {/* TEMPORARILY HIDDEN
               <p style={{ fontSize: '18px', color: '#555555', marginBottom: '48px' }}>
                 Where should we send your personalised AI opportunity summary?
               </p>
+              */}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 <div>
