@@ -24,9 +24,21 @@ import './App.css';
 import AssessmentOverlay from './Assessment';
 
 const slides = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
+const getIsMobile = () => typeof window !== 'undefined' && window.innerWidth <= 768;
+const getScale = () => {
+  if (typeof window === 'undefined') return 1;
+  const scaleX = window.innerWidth / 1920;
+  const scaleY = window.innerHeight / 1080;
+  return Math.min(scaleX, scaleY);
+};
+
 const ResponsiveWrapper = ({ children }) => {
-  const [scale, setScale] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
+  // Computed synchronously from the initial render (rather than only
+  // inside a useEffect, which fires after the first paint) so mobile
+  // doesn't briefly flash the unscaled 1920x1080 desktop layout before
+  // correcting itself a frame later.
+  const [scale, setScale] = useState(getScale);
+  const [isMobile, setIsMobile] = useState(getIsMobile);
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,7 +53,6 @@ const ResponsiveWrapper = ({ children }) => {
       }
     };
 
-    handleResize(); // Initial call on mount
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);

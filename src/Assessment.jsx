@@ -444,11 +444,9 @@ export default function AssessmentOverlay({ onClose }) {
 
               {(questions[currentStep - 1].type === 'single' || questions[currentStep - 1].type === 'multiple') && (
                 <div
-                  className={
-                    questions[currentStep - 1].options.length > 8
-                      ? 'assessment-options-grid'
-                      : 'assessment-options-list'
-                  }
+                  className={`assessment-scroll-area ${
+                    questions[currentStep - 1].options.length > 8 ? 'assessment-options-grid' : 'assessment-options-list'
+                  }`}
                   style={{
                     display: questions[currentStep - 1].options.length > 8 ? 'grid' : 'flex',
                     flexDirection: questions[currentStep - 1].options.length > 8 ? 'row' : 'column',
@@ -625,6 +623,7 @@ export default function AssessmentOverlay({ onClose }) {
               </h2>
 
               <div
+                className="assessment-scroll-area"
                 style={{
                   display: 'flex',
                   flexDirection: 'column',

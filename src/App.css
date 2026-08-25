@@ -166,12 +166,45 @@
   display: none;
 }
 
+/* Show a visible scrollbar by default on any assessment area that
+   overflows, instead of relying on the OS/browser default (which on
+   some platforms hides it until actively scrolling), so it's obvious
+   there's more content to scroll through. */
+.assessment-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c9c9 transparent;
+}
+
+.assessment-scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.assessment-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.assessment-scroll-area::-webkit-scrollbar-thumb {
+  background-color: #c9c9c9;
+  border-radius: 4px;
+}
+
 @media (max-width: 768px) {
   body,
   #root {
     overflow: visible !important;
     height: auto !important;
     min-height: 100vh;
+  }
+
+  /* #root is flex-centered (justify/align: center) for the desktop
+     canvas — on mobile that leaves .mobile-wrapper as a centered flex
+     item instead of a full-width, top-aligned block, which can shift
+     content horizontally/vertically out of place. Reset it to a
+     plain block so the mobile layout isn't fighting the desktop
+     centering rules. */
+  #root {
+    display: block !important;
+    width: 100% !important;
   }
 
   .app-container {
@@ -212,9 +245,11 @@
   .slide1-left-panel {
     width: 100% !important;
     height: auto !important;
+    min-height: 100vh !important; /* Fill the first screen so the video panel starts below the fold, not right after the CTA */
     padding: 24px 24px 60px 24px !important; /* Top padding below header */
     display: flex !important;
     flex-direction: column !important;
+    justify-content: center !important;
   }
 
   .slide1-right-panel {
@@ -335,6 +370,9 @@
     width: 16px !important;
     height: 16px !important;
   }
+  .assessment-scroll-area {
+    gap: 12px !important;
+  }
 
   .assessment-question-title {
     font-size: 20px !important; /* Huge reduction to prevent aggressive wrapping */
@@ -342,7 +380,7 @@
     margin-bottom: 10px !important;
   }
   .assessment-option-btn {
-    padding: 16px 20px !important;
+    padding: 14px !important;
     font-size: 16px !important;
   }
 }
