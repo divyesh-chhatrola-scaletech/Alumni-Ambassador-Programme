@@ -378,8 +378,8 @@ export default function AssessmentOverlay({ onClose }) {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px 60px',
+        justifyContent: currentStep === thankYouStep ? 'center' : 'flex-start',
+        padding: '60px 60px 40px 60px',
         position: 'relative',
         overflow: 'hidden'
       }}>

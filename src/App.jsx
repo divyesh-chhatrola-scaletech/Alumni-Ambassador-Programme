@@ -446,8 +446,14 @@ function Slide1({ onOpenAssessment }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.1 }}
           style={{
-            marginTop: "24px",
-            maxWidth: "640px",
+            position: "absolute",
+            bottom: "40px",
+            left: "80px",
+            right: "60px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
           }}
         >
           <p
@@ -463,7 +469,7 @@ function Slide1({ onOpenAssessment }) {
             organisation.
           </p>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "20px", justifyContent: "center" }}>
             <motion.button
               onClick={onOpenAssessment}
               style={{
