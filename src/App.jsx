@@ -440,51 +440,68 @@ function Slide1({ onOpenAssessment }) {
           </p>
         </motion.div>
 
-        <div
+        {/* Assessment details & Start Survey button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.1 }}
           style={{
-            position: "absolute",
-            bottom: "60px",
-            left: 0,
-            right: 0,
-            display: "flex",
-            justifyContent: "center",
+            marginTop: "24px",
+            maxWidth: "640px",
           }}
         >
-          <motion.button
-            onClick={onOpenAssessment}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.1 }}
+          <p
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: "52px",
-              padding: "18px 32px",
-              borderRadius: "0px",
-              background: "#6C3BFF",
-              color: "white",
-              fontSize: "18px",
-              fontWeight: 600,
-              textDecoration: "none",
-              border: "none",
-              cursor: "pointer",
-              boxShadow: "0 10px 30px rgba(108,59,255,0.18)",
-              transition: "all 250ms ease",
+              fontSize: "17px",
+              fontWeight: 500,
+              color: "#111111",
+              marginBottom: "24px",
+              lineHeight: 1.4,
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#5A2EF5";
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#6C3BFF";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
-            aria-label="Get Started"
           >
-            Get Started
-          </motion.button>
-        </div>
+            Discover where AI can create the greatest value for you and your
+            organisation.
+          </p>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <motion.button
+              onClick={onOpenAssessment}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                height: "52px",
+                padding: "18px 32px",
+                borderRadius: "0px",
+                background: "#6C3BFF",
+                color: "white",
+                fontSize: "18px",
+                fontWeight: 600,
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 10px 30px rgba(108,59,255,0.18)",
+                transition: "all 250ms ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#5A2EF5";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#6C3BFF";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+              aria-label="Start Survey"
+            >
+              Start Survey <ArrowRight size={20} />
+            </motion.button>
+            <span
+              style={{ fontSize: "14px", color: "#777777", fontWeight: 500 }}
+            >
+              Estimated time: 3–5 Minutes
+            </span>
+          </div>
+        </motion.div>
       </div>
 
       {/* Right Media Area (54%) — clean full-height canvas, edge-to-edge, no dividers over it */}

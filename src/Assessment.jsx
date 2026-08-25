@@ -156,7 +156,7 @@ const questions = [
 ];
 
 export default function AssessmentOverlay({ onClose }) {
-  const [currentStep, setCurrentStep] = useState(0); 
+  const [currentStep, setCurrentStep] = useState(1); 
   
   const [answers, setAnswers] = useState({});
   const [selectedOptions, setSelectedOptions] = useState({});
@@ -258,7 +258,9 @@ export default function AssessmentOverlay({ onClose }) {
   };
 
   const handleBack = () => {
-    if (currentStep > 0 && currentStep !== thankYouStep) {
+    if (currentStep === 1) {
+      onClose();
+    } else if (currentStep > 1 && currentStep !== thankYouStep) {
       setCurrentStep(prev => prev - 1);
     }
   };
@@ -382,45 +384,6 @@ export default function AssessmentOverlay({ onClose }) {
         overflow: 'hidden'
       }}>
         <AnimatePresence mode="wait">
-          
-          {/* STEP 0: Intro */}
-          {currentStep === 0 && (
-            <motion.div key="intro" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', textAlign: 'center', maxHeight: '100%', overflowY: 'auto', paddingRight: '8px' }}>
-              <div style={{ fontSize: '14px', fontWeight: 600, color: '#6C3BFF', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '16px' }}>
-                Assessment
-              </div>
-              <h1 style={{ fontSize: '64px', fontWeight: 900, color: '#111111', lineHeight: 1.1, letterSpacing: '-0.02em', marginBottom: '24px' }}>
-                Realise Value with AI
-              </h1>
-              <p style={{ fontSize: '24px', fontWeight: 500, color: '#2F2F2F', marginBottom: '16px' }}>
-                Discover where AI can create the greatest value for you and your organisation.
-              </p>
-              <p style={{ fontSize: '18px', color: '#555555', marginBottom: '48px', lineHeight: 1.6 }}>
-                This assessment takes approximately 3–5 minutes and will help identify opportunities for productivity, innovation and AI implementation.
-              </p>
-              
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '24px' }}>
-                <motion.button
-                  onClick={handleNext}
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  style={{
-                    backgroundColor: '#6C3BFF', color: '#ffffff',
-                    border: 'none', borderRadius: '0px',
-                    height: '52px', padding: '0 32px',
-                    fontSize: '18px', fontWeight: 600,
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px'
-                  }}
-                >
-                  Start Assessment <ArrowRight size={20} />
-                </motion.button>
-                <div style={{ fontSize: '14px', color: '#777777', fontWeight: 500 }}>
-                  Estimated time: 3–5 Minutes
-                </div>
-              </div>
-            </motion.div>
-          )}
-
           {/* STEPS 1-11: Questions */}
           {currentStep > 0 && currentStep <= totalQuestions && (
             <motion.div key={`q-${currentStep}`} variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', width: '100%', maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
