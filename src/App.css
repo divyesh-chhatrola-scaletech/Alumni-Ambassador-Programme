@@ -25,11 +25,21 @@
   width: 100%;
 }
 
-.col-span-12 { grid-column: span 12; }
-.col-span-8 { grid-column: span 8; }
-.col-span-6 { grid-column: span 6; }
-.col-span-4 { grid-column: span 4; }
-.col-span-3 { grid-column: span 3; }
+.col-span-12 {
+  grid-column: span 12;
+}
+.col-span-8 {
+  grid-column: span 8;
+}
+.col-span-6 {
+  grid-column: span 6;
+}
+.col-span-4 {
+  grid-column: span 4;
+}
+.col-span-3 {
+  grid-column: span 3;
+}
 
 .card-grid {
   display: grid;
@@ -132,7 +142,7 @@
   background-color: #ffffff;
   overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 0 40px rgba(0,0,0,0.05);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
 }
 
 .mobile-wrapper {
@@ -151,8 +161,14 @@
   display: grid !important;
 }
 
+/* Mobile-only scroll hint (see @media block below) — hidden by default */
+.assessment-scroll-hint {
+  display: none;
+}
+
 @media (max-width: 768px) {
-  body, #root {
+  body,
+  #root {
     overflow: visible !important;
     height: auto !important;
     min-height: 100vh;
@@ -162,7 +178,7 @@
     height: auto !important;
     min-height: 100vh;
   }
-  
+
   .main-content-area {
     height: auto !important;
     overflow: visible !important;
@@ -171,7 +187,6 @@
   }
 
   .slide-absolute-container {
-    position: relative !important;
     height: auto !important;
     overflow: visible !important;
     display: flex !important;
@@ -201,7 +216,7 @@
     display: flex !important;
     flex-direction: column !important;
   }
-  
+
   .slide1-right-panel {
     width: 100% !important;
     position: relative !important;
@@ -209,29 +224,38 @@
     height: 600px !important; /* Large visual block that guarantees no content cutoff */
     bottom: auto !important;
   }
-  
+
   .slide1-divider {
     display: none !important;
   }
-  
+
+  /* Decorative bubbles animate across a full 110vh->-20vh travel range,
+     which was safe on the fixed 1080px desktop canvas but, once the
+     mobile layout switches to overflow: visible / height: auto and
+     stacks content in normal flow, floats on top of/over the stacked
+     content below as the page scrolls. Hide it on mobile. */
+  .slide1-bubbles {
+    display: none !important;
+  }
+
   .slide1-title {
     font-size: 38px !important; /* Ensures "REALISE VALUE" fits on one line */
     line-height: 1.05 !important;
     margin-top: 16px !important;
     margin-bottom: 24px !important;
   }
-  
+
   .slide1-subtitle {
     font-size: 18px !important;
     margin-bottom: 40px !important;
   }
-  
+
   .slide1-vision {
     max-width: 100% !important;
     margin-left: 0 !important;
     padding: 0 0 0 16px !important;
   }
-  
+
   .slide1-assessment {
     position: relative !important;
     bottom: auto !important;
@@ -255,7 +279,7 @@
   .slide1-carousel-container {
     padding: 40px 24px !important;
   }
-  
+
   .slide1-carousel-headline {
     font-size: 24px !important;
   }
@@ -270,21 +294,55 @@
   }
 
   /* Assessment Overlay Mobile Adjustments */
-  .assessment-header {
-    padding: 0 24px !important;
-  }
   .assessment-main {
     padding: 24px 24px 16px 24px !important;
   }
+
+  /* Fade hint at the bottom of the question screen so it's clear the
+     options list scrolls further — easy to miss on small screens
+     where the last option can land right at the fold. */
+  .assessment-scroll-hint {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 36px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff 90%);
+    pointer-events: none;
+    z-index: 5;
+  }
   .assessment-footer {
     padding: 0 24px !important;
+    /* Stronger separation from the scrollable content above it on
+       small screens, where a shadow alone reads too faint against a
+       white-on-white background — pair it with a visible top border
+       and a distinct background tint so the bar itself reads as a
+       separate surface rather than a continuation of the page. */
+    background-color: #fafafa !important;
+    border-top: 1px solid #dcdcdc !important;
+    box-shadow: 0 -6px 16px -4px rgba(0, 0, 0, 0.25) !important;
+    position: relative !important;
+    z-index: 10 !important;
   }
+
+  .assessment-nav-btn {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .assessment-nav-btn-icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
   .assessment-question-title {
     font-size: 20px !important; /* Huge reduction to prevent aggressive wrapping */
-    margin-bottom: 20px !important;
+    line-height: 22px !important;
+    margin-bottom: 10px !important;
   }
   .assessment-option-btn {
-    padding: 16px 20px !important; 
-    font-size: 16px !important; 
+    padding: 16px 20px !important;
+    font-size: 16px !important;
   }
 }
