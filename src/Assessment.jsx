@@ -333,7 +333,7 @@ export default function AssessmentOverlay({ onClose }) {
 
   return (
     <div style={{
-      position: 'absolute',
+      position: 'fixed',
       top: 0, left: 0, right: 0, bottom: 0,
       backgroundColor: '#ffffff',
       zIndex: 100,
@@ -342,8 +342,9 @@ export default function AssessmentOverlay({ onClose }) {
       fontFamily: 'GT America Regular, sans-serif'
     }}>
       {/* Header / Progress Bar */}
-      <header style={{
+      <header className="assessment-header" style={{
         height: '80px',
+        flexShrink: 0,
         display: 'flex',
         alignItems: 'center',
         padding: '0 60px',
@@ -373,21 +374,22 @@ export default function AssessmentOverlay({ onClose }) {
       </header>
 
       {/* Main Content Area */}
-      <main style={{
+      <main className="assessment-main" style={{
         flex: 1,
+        minHeight: 0,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: currentStep === thankYouStep ? 'center' : 'flex-start',
-        padding: '60px 60px 40px 60px',
+        padding: '40px 60px 24px 60px',
         position: 'relative',
         overflow: 'hidden'
       }}>
         <AnimatePresence mode="wait">
           {/* STEPS 1-11: Questions */}
           {currentStep > 0 && currentStep <= totalQuestions && (
-            <motion.div key={`q-${currentStep}`} variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', width: '100%', maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
-              <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#111111', lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: questions[currentStep - 1].subtitle ? '8px' : '32px', flexShrink: 0 }}>
+            <motion.div key={`q-${currentStep}`} variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', width: '100%', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+              <h2 className="assessment-question-title" style={{ fontSize: '28px', fontWeight: 700, color: '#111111', lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: questions[currentStep - 1].subtitle ? '8px' : '32px', flexShrink: 0 }}>
                 {questions[currentStep - 1].question}
               </h2>
 
@@ -401,7 +403,10 @@ export default function AssessmentOverlay({ onClose }) {
               )}
               
               {(questions[currentStep - 1].type === 'single' || questions[currentStep - 1].type === 'multiple') && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto', flexShrink: 1, minHeight: 0, paddingRight: '8px', paddingBottom: '16px' }}>
+                <div 
+                  className={questions[currentStep - 1].options.length > 8 ? "assessment-options-grid" : "assessment-options-list"}
+                  style={{ display: questions[currentStep - 1].options.length > 8 ? 'grid' : 'flex', flexDirection: questions[currentStep - 1].options.length > 8 ? 'row' : 'column', gap: '16px', overflowY: 'auto', flexShrink: 1, minHeight: 0, paddingRight: '8px', paddingBottom: '16px' }}
+                >
                   {questions[currentStep - 1].options.map((opt, idx) => {
                     const currentQ = questions[currentStep - 1];
                     const qId = currentQ.id;
@@ -417,8 +422,9 @@ export default function AssessmentOverlay({ onClose }) {
                     const isMaxReached = isMultiple && !isSelected && currentCount >= maxSelect;
 
                     return (
-                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+                      <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', gridColumn: isOther ? '1 / -1' : 'auto' }}>
                         <motion.button
+                          className="assessment-option-btn"
                           onClick={() => handleSelectOption(qId, opt, currentQ.type, maxSelect)}
                           whileHover={!isMaxReached ? {
                             backgroundColor: isSelected ? '#F4F0FF' : '#FAF8FF',
@@ -496,7 +502,9 @@ export default function AssessmentOverlay({ onClose }) {
                   placeholder={questions[currentStep - 1].placeholder}
                   style={{
                     width: '100%',
-                    height: '240px',
+                    flex: 1,
+                    minHeight: '120px',
+                    maxHeight: '300px',
                     padding: '24px',
                     backgroundColor: '#FAFAFA',
                     border: '1px solid #EAEAEA',
@@ -523,12 +531,12 @@ export default function AssessmentOverlay({ onClose }) {
 
           {/* STEP 12: Contact Details */}
           {currentStep === contactStep && (
-            <motion.div key="contact" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', width: '100%', maxHeight: '100%', overflowY: 'auto', paddingRight: '8px', paddingBottom: '16px' }}>
-              <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#111111', lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: '16px' }}>
+            <motion.div key="contact" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', width: '100%', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+              <h2 style={{ fontSize: '28px', fontWeight: 700, color: '#111111', lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: '16px', flexShrink: 0 }}>
                 Almost done
               </h2>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto', flexShrink: 1, minHeight: 0, paddingRight: '8px', paddingBottom: '16px' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#111111', marginBottom: '8px' }}>Full Name *</label>
                   <input 
@@ -595,7 +603,7 @@ export default function AssessmentOverlay({ onClose }) {
 
           {/* STEP 13: Thank You Screen */}
           {currentStep === thankYouStep && (
-            <motion.div key="thankyou" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', textAlign: 'center', maxHeight: '100%', overflowY: 'auto', paddingRight: '8px', paddingBottom: '16px' }}>
+            <motion.div key="thankyou" variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ maxWidth: '960px', textAlign: 'center', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                <motion.div
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -609,11 +617,11 @@ export default function AssessmentOverlay({ onClose }) {
                 Thank You!
               </h1>
               <p style={{ fontSize: '20px', fontWeight: 500, color: '#2F2F2F', marginBottom: '24px' }}>
-                Your AI Value Assessment has been successfully submitted.
+                Thank you for taking the time to share your thoughts with us.
               </p>
-              <p style={{ fontSize: '18px', color: '#555555', marginBottom: '48px', lineHeight: 1.6 }}>
-                Our team will review your responses and identify potential AI opportunities relevant to your role and organisation.<br/><br/>
-                You'll hear from us soon with personalised recommendations.
+              <p style={{ fontSize: '18px', color: '#555555', marginBottom: '48px', lineHeight: 1.6, maxWidth: '700px' }}>
+                Your input is a great starting point to explore how AI can create meaningful value for you, your work, or your organisation.<br/><br/>
+                We look forward to connecting, exchanging ideas, and exploring what’s possible together.
               </p>
 
               <motion.button
@@ -628,7 +636,7 @@ export default function AssessmentOverlay({ onClose }) {
                   cursor: 'pointer', display: 'inline-flex', alignItems: 'center'
                 }}
               >
-                Return to Presentation
+                Back to Home
               </motion.button>
             </motion.div>
           )}
@@ -638,8 +646,9 @@ export default function AssessmentOverlay({ onClose }) {
 
       {/* Footer / Navigation */}
       {currentStep > 0 && currentStep < thankYouStep && (
-        <footer style={{
+        <footer className="assessment-footer" style={{
           height: '100px',
+          flexShrink: 0,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',

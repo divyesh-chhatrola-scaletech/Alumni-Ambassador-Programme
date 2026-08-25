@@ -26,14 +26,19 @@ import AssessmentOverlay from "./Assessment";
 const slides = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
 const ResponsiveWrapper = ({ children }) => {
   const [scale, setScale] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
-      // Calculate scale based on the master 1920x1080 design canvas
-      const scaleX = window.innerWidth / 1920;
-      const scaleY = window.innerHeight / 1080;
-      // Use Math.min to ensure it perfectly fits within the screen without clipping
-      setScale(Math.min(scaleX, scaleY));
+      const width = window.innerWidth;
+      if (width <= 768) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+        const scaleX = width / 1920;
+        const scaleY = window.innerHeight / 1080;
+        setScale(Math.min(scaleX, scaleY));
+      }
     };
 
     handleResize(); // Initial call on mount
@@ -41,18 +46,15 @@ const ResponsiveWrapper = ({ children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  if (isMobile) {
+    return <div className="mobile-wrapper">{children}</div>;
+  }
+
   return (
     <div
+      className="desktop-wrapper"
       style={{
-        width: "1920px",
-        height: "1080px",
         transform: `scale(${scale})`,
-        transformOrigin: "center center",
-        position: "relative",
-        backgroundColor: "#ffffff",
-        overflow: "hidden",
-        flexShrink: 0,
-        boxShadow: "0 0 40px rgba(0,0,0,0.05)", // Subtle shadow for letterboxed states
       }}
     >
       {children}
@@ -84,7 +86,7 @@ export default function App() {
   return (
     <ResponsiveWrapper>
       <div
-        className="w-full h-full relative"
+        className="w-full h-full relative app-container"
         style={{
           width: "100%",
           height: "100%",
@@ -94,6 +96,7 @@ export default function App() {
       >
         {/* Header */}
         <header
+          className="app-header"
           style={{
             position: "absolute",
             top: 0,
@@ -144,6 +147,7 @@ export default function App() {
 
         {/* Main Content Area */}
         <main
+          className="main-content-area"
           style={{
             flex: 1,
             display: "flex",
@@ -158,6 +162,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="slide-absolute-container"
               style={{
                 width: "100%",
                 height: "100%",
@@ -283,6 +288,7 @@ function Slide1({ onOpenAssessment }) {
 
   return (
     <div
+      className="slide-absolute-container"
       style={{
         width: "100%",
         height: "100%",
@@ -294,6 +300,7 @@ function Slide1({ onOpenAssessment }) {
     >
       {/* Divider 01 — thin black line below the header, spanning the content column only (never over the video) */}
       <motion.div
+        className="slide1-divider"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
@@ -311,6 +318,7 @@ function Slide1({ onOpenAssessment }) {
 
       {/* Divider 02 — thin black vertical seam between content and video */}
       <motion.div
+        className="slide1-divider"
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
@@ -360,6 +368,7 @@ function Slide1({ onOpenAssessment }) {
 
       {/* Left Content Area (46%) — single editorial column, vertically centred below the header */}
       <div
+        className="slide1-left-panel"
         style={{
           width: "46%",
           height: "100%",
@@ -372,6 +381,7 @@ function Slide1({ onOpenAssessment }) {
         }}
       >
         <motion.h1
+          className="slide1-title"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
@@ -390,6 +400,7 @@ function Slide1({ onOpenAssessment }) {
         </motion.h1>
 
         <motion.p
+          className="slide1-subtitle"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
@@ -406,6 +417,7 @@ function Slide1({ onOpenAssessment }) {
 
         {/* Horizontal divider above Our Vision — full width, extending out of padding */}
         <motion.div
+          className="slide1-divider"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.9 }}
@@ -421,6 +433,7 @@ function Slide1({ onOpenAssessment }) {
 
         {/* Our Vision — editorial callout: a single thin red accent line hanging in the margin; text sits on the column grid, aligned with the statement above */}
         <motion.div
+          className="slide1-vision"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
@@ -433,7 +446,7 @@ function Slide1({ onOpenAssessment }) {
             maxWidth: "580px",
           }}
         >
-          <div className="text-small-label">VISION</div>
+          <div className="text-small-label" style={{ marginBottom: "12px" }}>VISION</div>
           <p className="text-body">
             To enable learners to explore, experiment, implement AI integrated
             solution that create meaningful value for their organisations.
@@ -442,6 +455,7 @@ function Slide1({ onOpenAssessment }) {
 
         {/* Assessment details & Start Survey button */}
         <motion.div
+          className="slide1-assessment"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.1 }}
@@ -512,6 +526,7 @@ function Slide1({ onOpenAssessment }) {
 
       {/* Right Media Area (54%) — clean full-height canvas, edge-to-edge, no dividers over it */}
       <div
+        className="slide1-right-panel"
         style={{
           width: "54%",
           position: "absolute",
@@ -549,6 +564,7 @@ function Slide1({ onOpenAssessment }) {
 
         {/* Carousel Container */}
         <div
+          className="slide1-carousel-container"
           style={{
             position: "absolute",
             top: 0,
@@ -586,6 +602,7 @@ function Slide1({ onOpenAssessment }) {
                 </div>
 
                 <h2
+                  className="slide1-carousel-headline"
                   style={{
                     fontFamily: "GT America Bold, sans-serif",
                     fontSize: "30px",
@@ -626,6 +643,7 @@ function Slide1({ onOpenAssessment }) {
 
         {/* Bottom Indicator */}
         <div
+          className="slide1-carousel-indicator"
           style={{
             position: "absolute",
             bottom: "40px",

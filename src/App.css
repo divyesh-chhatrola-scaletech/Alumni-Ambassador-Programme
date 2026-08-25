@@ -122,3 +122,169 @@
   color: var(--text-tertiary);
   margin: 40px 0;
 }
+
+/* Responsive Layout overrides */
+.desktop-wrapper {
+  width: 1920px;
+  height: 1080px;
+  transform-origin: center center;
+  position: relative;
+  background-color: #ffffff;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 0 40px rgba(0,0,0,0.05);
+}
+
+.mobile-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  background-color: #ffffff;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Global Assessment Grid for Desktop */
+.assessment-options-grid {
+  grid-template-columns: repeat(2, 1fr) !important;
+  display: grid !important;
+}
+
+@media (max-width: 768px) {
+  body, #root {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  .app-container {
+    height: auto !important;
+    min-height: 100vh;
+  }
+  
+  .main-content-area {
+    height: auto !important;
+    overflow: visible !important;
+    flex: none !important;
+    display: block !important;
+  }
+
+  .slide-absolute-container {
+    position: relative !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: flex !important;
+    flex-direction: column !important; /* Force vertical stack! */
+  }
+
+  .app-header {
+    height: auto !important;
+    padding: 24px 24px 12px 24px !important; /* Clean top padding */
+    background: #ffffff;
+    position: relative !important; /* Participate in document flow */
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    z-index: 100 !important;
+  }
+
+  .app-header img {
+    height: 48px !important; /* Scale logo down slightly for mobile to prevent clipping */
+    margin-top: 8px !important;
+  }
+
+  /* Slide 1 Mobile Layout */
+  .slide1-left-panel {
+    width: 100% !important;
+    height: auto !important;
+    padding: 24px 24px 60px 24px !important; /* Top padding below header */
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .slide1-right-panel {
+    width: 100% !important;
+    position: relative !important;
+    top: auto !important;
+    height: 600px !important; /* Large visual block that guarantees no content cutoff */
+    bottom: auto !important;
+  }
+  
+  .slide1-divider {
+    display: none !important;
+  }
+  
+  .slide1-title {
+    font-size: 38px !important; /* Ensures "REALISE VALUE" fits on one line */
+    line-height: 1.05 !important;
+    margin-top: 16px !important;
+    margin-bottom: 24px !important;
+  }
+  
+  .slide1-subtitle {
+    font-size: 18px !important;
+    margin-bottom: 40px !important;
+  }
+  
+  .slide1-vision {
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    padding: 0 0 0 16px !important;
+  }
+  
+  .slide1-assessment {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin-top: 48px !important;
+    width: 100% !important;
+    padding: 0 !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  .slide1-assessment > div {
+    justify-content: flex-start !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .slide1-carousel-container {
+    padding: 40px 24px !important;
+  }
+  
+  .slide1-carousel-headline {
+    font-size: 24px !important;
+  }
+
+  .assessment-options-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .slide1-carousel-indicator {
+    bottom: 20px !important;
+    left: 24px !important;
+  }
+
+  /* Assessment Overlay Mobile Adjustments */
+  .assessment-header {
+    padding: 0 24px !important;
+  }
+  .assessment-main {
+    padding: 24px 24px 16px 24px !important;
+  }
+  .assessment-footer {
+    padding: 0 24px !important;
+  }
+  .assessment-question-title {
+    font-size: 20px !important; /* Huge reduction to prevent aggressive wrapping */
+    margin-bottom: 20px !important;
+  }
+  .assessment-option-btn {
+    padding: 16px 20px !important; 
+    font-size: 16px !important; 
+  }
+}
