@@ -11,12 +11,13 @@ export async function submitAssessment(answers, contactInfo, questions) {
      * Prepare answers
      */
     const formattedAnswers = questions.map(function (question) {
+      let rawVal = answers[question.id] ?? "";
+      let formattedValue = Array.isArray(rawVal) ? rawVal.join(", ") : rawVal;
+
       return {
         questionId: question.id,
-
         question: question.question,
-
-        value: answers[question.id] ?? "",
+        value: formattedValue,
       };
     });
 
@@ -25,15 +26,10 @@ export async function submitAssessment(answers, contactInfo, questions) {
      */
     const submission = {
       submittedAt: new Date().toISOString(),
-
       name: contactInfo?.name?.trim() || "",
-
       email: contactInfo?.email?.trim() || "",
-
       company: contactInfo?.company?.trim() || "",
-
       linkedin: contactInfo?.linkedin?.trim() || "",
-
       answers: formattedAnswers,
     };
 
@@ -44,11 +40,9 @@ export async function submitAssessment(answers, contactInfo, questions) {
      */
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
-
       headers: {
         "Content-Type": "text/plain;charset=utf-8",
       },
-
       body: JSON.stringify(submission),
     });
 
@@ -66,7 +60,6 @@ export async function submitAssessment(answers, contactInfo, questions) {
 
     return {
       success: true,
-
       message: "Assessment submitted successfully.",
     };
   } catch (error) {
@@ -74,7 +67,6 @@ export async function submitAssessment(answers, contactInfo, questions) {
 
     return {
       success: false,
-
       message:
         error.message ||
         "Something went wrong while submitting the assessment.",

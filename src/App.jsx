@@ -371,16 +371,6 @@ function Slide1({ onOpenAssessment }) {
           zIndex: 3,
         }}
       >
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
-          className="text-small-label"
-          style={{ marginTop: "32px", marginBottom: "48px" }}
-        >
-          Alumni Ambassador Programme
-        </motion.div>
-
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
