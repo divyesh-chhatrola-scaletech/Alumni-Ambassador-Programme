@@ -1,5 +1,5 @@
 const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbw6LdyX-aLz7svhZA5UdSmuNbA4Ug7TQyX3Yb5hTc8_W_GJeS2VG6C5oNlelzxPNx0C/exec";
+  "https://script.google.com/macros/s/AKfycbz5oSzTvZcuQDzo2Co29gl_fKQZEiW-5k-V_J1HkEpqUBYyg3yG6cffDdAhgfuTnSTq/exec";
 
 export async function submitAssessment(answers, contactInfo, questions) {
   try {
