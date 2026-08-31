@@ -365,6 +365,11 @@
     width: 40px !important;
     height: 40px !important;
   }
+  
+  .assessment-submit-btn {
+    width: auto !important;
+    padding: 0 16px !important;
+  }
 
   .assessment-nav-btn-icon {
     width: 16px !important;

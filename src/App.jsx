@@ -493,7 +493,7 @@ function Slide1({ onOpenAssessment }) {
               lineHeight: 1.4,
             }}
           >
-            Discover where AI can create the greatest value for you and your
+            Discover where AI can create the greatest value for you or your
             organisation.
           </p>
 

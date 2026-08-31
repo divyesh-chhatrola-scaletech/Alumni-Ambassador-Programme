@@ -923,7 +923,7 @@ export default function AssessmentOverlay({ onClose }) {
             variants={!isButtonDisabled ? buttonVariants : {}}
             whileHover={!isButtonDisabled ? 'hover' : ''}
             aria-label={currentStep === contactStep ? 'Finish' : 'Next'}
-            className="assessment-nav-btn"
+            className={`assessment-nav-btn ${currentStep === contactStep ? 'assessment-submit-btn' : ''}`}
             style={{
               backgroundColor: isButtonDisabled ? '#EAEAEA' : '#6C3BFF',
               color: isButtonDisabled ? '#A0A0A0' : '#ffffff',
