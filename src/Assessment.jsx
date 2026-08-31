@@ -929,20 +929,29 @@ export default function AssessmentOverlay({ onClose }) {
               color: isButtonDisabled ? '#A0A0A0' : '#ffffff',
               border: 'none',
               borderRadius: '0px',
-              width: '52px',
+              width: currentStep === contactStep ? 'auto' : '52px',
               height: '52px',
-              padding: 0,
+              padding: currentStep === contactStep ? '0 24px' : 0,
               cursor: isButtonDisabled ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              gap: '8px',
               transition: 'background-color 0.3s ease, color 0.3s ease',
+              fontWeight: 600,
+              fontSize: '16px',
             }}
           >
             {isSubmitting ? (
-              <Loader2 size={20} className="spin-icon assessment-nav-btn-icon" />
+              <>
+                {currentStep === contactStep && <span>Submitting...</span>}
+                <Loader2 size={20} className="spin-icon assessment-nav-btn-icon" />
+              </>
             ) : currentStep === contactStep ? (
-              <CheckCircle size={20} className="assessment-nav-btn-icon" />
+              <>
+                <span>Submit</span>
+                <CheckCircle size={20} className="assessment-nav-btn-icon" />
+              </>
             ) : (
               <ArrowRight size={20} className="assessment-nav-btn-icon" />
             )}
