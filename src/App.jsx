@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Video,
@@ -18,15 +18,26 @@ import {
   Book,
   Presentation,
   CheckCircle,
-} from 'lucide-react';
-import './index.css';
-import './App.css';
-import AssessmentOverlay from './Assessment';
+  Handshake,
+  Sparkles,
+} from "lucide-react";
+import "./index.css";
+import "./App.css";
+import AssessmentOverlay from "./Assessment";
+import PhiloneosHeader from "./PhiloneosHeader";
 
-const slides = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
-const getIsMobile = () => typeof window !== 'undefined' && window.innerWidth <= 768;
+// Slides 4 & 5 ("Bringing Pathway To Life" and "We Will Deliver Impact") are
+// temporarily hidden from the UI. The Slide4/Slide5 components are intentionally
+// kept below — flip this flag to true to bring them back.
+const SHOW_EXTRA_SLIDES = false;
+const allSlides = [Slide1, Slide2, Slide3, Slide4, Slide5];
+// The deck renders straight off this list, so a hidden slide can never leave a
+// blank screen behind — there is simply no index for it.
+const slides = SHOW_EXTRA_SLIDES ? allSlides : allSlides.slice(0, 3);
+const getIsMobile = () =>
+  typeof window !== "undefined" && window.innerWidth <= 768;
 const getScale = () => {
-  if (typeof window === 'undefined') return 1;
+  if (typeof window === "undefined") return 1;
   const scaleX = window.innerWidth / 1920;
   const scaleY = window.innerHeight / 1080;
   return Math.min(scaleX, scaleY);
@@ -53,8 +64,8 @@ const ResponsiveWrapper = ({ children }) => {
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   if (isMobile) {
@@ -77,21 +88,28 @@ export default function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAssessmentOpen, setIsAssessmentOpen] = useState(false);
 
+  // Clamped so a stale index (e.g. left over from a hot reload after a slide
+  // was hidden) still resolves to a real slide instead of empty white space.
+  const activeSlide = Math.min(currentSlide, slides.length - 1);
+  const ActiveSlide = slides[activeSlide];
+
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === slides.length - 1 ? prev : prev + 1));
+    setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1));
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? prev : prev - 1));
+    setCurrentSlide((prev) =>
+      Math.max(Math.min(prev, slides.length - 1) - 1, 0),
+    );
   };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
-      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === "ArrowRight" || e.key === "Space") nextSlide();
+      if (e.key === "ArrowLeft") prevSlide();
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   return (
@@ -99,96 +117,48 @@ export default function App() {
       <div
         className="w-full h-full relative app-container"
         style={{
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {/* Header */}
-        <header
-          className="app-header"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '92px',
-            padding: '0 80px 18px 80px',
-            zIndex: 50,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-          }}
-        >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            style={{ display: 'flex', alignItems: 'flex-end', gap: '56px' }}
-          >
-            <img
-              src="/tou-logo.svg"
-              alt="Tomorrow University Logo"
-              style={{
-                height: '62px',
-                objectFit: 'contain',
-                cursor: 'pointer',
-              }}
-              onClick={() => setCurrentSlide(0)}
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            style={{
-              fontSize: '14px',
-              fontWeight: 600,
-              color: '#111111',
-              letterSpacing: '0.05em',
-              display: 'none', // Temporarily hidden
-            }}
-          >
-            {String(currentSlide + 1).padStart(2, '0')} /{' '}
-            {String(slides.length).padStart(2, '0')}
-          </motion.div>
-        </header>
+        {/* Philoneos nav bar (shared with the assessment overlay) */}
+        <PhiloneosHeader
+          onLogoClick={() => setCurrentSlide(0)}
+          onAction={() => setIsAssessmentOpen(true)}
+        />
 
         {/* Main Content Area */}
         <main
           className="main-content-area"
           style={{
             flex: 1,
-            display: 'flex',
-            position: 'relative',
-            overflow: 'hidden',
+            display: "flex",
+            position: "relative",
+            overflow: "hidden",
           }}
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={currentSlide}
+              key={activeSlide}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="slide-absolute-container"
               style={{
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
+                width: "100%",
+                height: "100%",
+                position: "absolute",
                 top: 0,
                 left: 0,
               }}
             >
-              {currentSlide === 0 && (
-                <Slide1 onOpenAssessment={() => setIsAssessmentOpen(true)} />
-              )}
-              {currentSlide === 1 && <Slide2 />}
-              {currentSlide === 2 && <Slide3 />}
-              {currentSlide === 3 && <Slide4 />}
-              {currentSlide === 4 && <Slide5 />}
+              <ActiveSlide
+                onOpenAssessment={() => setIsAssessmentOpen(true)}
+                onExplore={nextSlide}
+              />
             </motion.div>
           </AnimatePresence>
         </main>
@@ -196,17 +166,17 @@ export default function App() {
         {/* Footer Navigation */}
         <footer
           style={{
-            position: 'absolute',
+            position: "absolute",
             bottom: 40,
             right: 60,
             zIndex: 50,
-            display: 'none', // Temporarily hidden (was "flex")
+            display: "none", // Temporarily hidden (was "flex")
             gap: 0,
           }}
         >
           <button
             onClick={prevSlide}
-            disabled={currentSlide === 0}
+            disabled={activeSlide === 0}
             className="nav-button"
           >
             <svg
@@ -224,7 +194,7 @@ export default function App() {
           </button>
           <button
             onClick={nextSlide}
-            disabled={currentSlide === slides.length - 1}
+            disabled={activeSlide === slides.length - 1}
             className="nav-button"
           >
             <svg
@@ -252,46 +222,72 @@ export default function App() {
   );
 }
 
-function Slide1({ onOpenAssessment }) {
+function Slide1({ onExplore }) {
   const [activeOverlaySlide, setActiveOverlaySlide] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
   const overlaySlides = [
     {
-      label: '01',
+      label: "01",
       headline:
-        'Knowledge and training gaps remain the biggest barriers to AI-driven value.',
+        "Knowledge and training gaps remain the biggest barriers to AI-driven value.",
       body: "According to McKinsey's State of AI Trust 2026, nearly 60% of organisations say knowledge and training gaps are the biggest barriers standing between them and real AI-driven value. That percentage was roughly 50% just a year ago, highlighting that while AI tools continue to evolve rapidly, organisational readiness is struggling to keep pace.",
     },
     {
-      label: '02',
+      label: "02",
       headline:
         "The difference isn't the AI tool. It's how the tool gets used.",
-      body: 'Most organisations today have access to broadly similar AI technologies. What separates businesses creating real impact is not the tool itself, but the depth of understanding behind how that tool is applied to solve meaningful business challenges.',
+      body: "Most organisations today have access to broadly similar AI technologies. What separates businesses creating real impact is not the tool itself, but the depth of understanding behind how that tool is applied to solve meaningful business challenges.",
     },
     {
-      label: '03',
-      headline: 'Business outcomes should guide AI adoption.',
+      label: "03",
+      headline: "Business outcomes should guide AI adoption.",
       body: "According to Gartner, many AI initiatives fail not because the technology doesn't work, but because they are never tied to the business capabilities that drive value. AI creates measurable impact when implementation is aligned with strategic business outcomes from the very beginning.",
+    },
+  ];
+
+  // Fixed first section of the hero panel - these three never cycle, unlike
+  // the insight carousel below them.
+  const journeyStages = [
+    {
+      label: "01",
+      title: "Discover",
+      subtitle: "Building the right Idea",
+      Icon: Compass,
+      points: ["Submit your idea", "Evaluations by Steering Committee"],
+    },
+    {
+      label: "02",
+      title: "Identify",
+      subtitle: "Learning through experimentation",
+      Icon: Search,
+      points: ["Hands-on POC AI workshops", "AI Agent Creation Labs"],
+    },
+    {
+      label: "03",
+      title: "Implement",
+      subtitle: "Turning ideas into real impact",
+      Icon: Rocket,
+      points: ["Build practical AI solutions", "Live demonstrations"],
     },
   ];
 
   useEffect(() => {
     if (isHovered) return;
-    const interval = setInterval(() => {
+    const timer = setTimeout(() => {
       setActiveOverlaySlide((prev) => (prev + 1) % overlaySlides.length);
     }, 6000);
-    return () => clearInterval(interval);
-  }, [isHovered, overlaySlides.length]);
+    return () => clearTimeout(timer);
+  }, [isHovered, activeOverlaySlide, overlaySlides.length]);
 
   const bubbleVariants = {
     animate: (i) => ({
-      y: ['110vh', '-20vh'],
+      y: ["110vh", "-20vh"],
       x: [`${i * 15 + 10}vw`, `${i * 15 + Math.random() * 10}vw`],
       transition: {
         duration: Math.random() * 15 + 25,
         repeat: Infinity,
-        ease: 'linear',
+        ease: "linear",
         delay: Math.random() * -20,
       },
     }),
@@ -301,46 +297,28 @@ function Slide1({ onOpenAssessment }) {
     <div
       className="slide-absolute-container"
       style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'flex',
-        background: '#ffffff',
-        overflow: 'hidden',
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        display: "flex",
+        background: "#ffffff",
+        overflow: "hidden",
       }}
     >
-      {/* Divider 01 — thin black line below the header, spanning the content column only (never over the video) */}
-      <motion.div
-        className="slide1-divider"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        style={{
-          position: 'absolute',
-          top: '92px',
-          left: 0,
-          width: '46%',
-          height: '1px',
-          background: '#111111',
-          transformOrigin: 'left',
-          zIndex: 10,
-        }}
-      />
-
-      {/* Divider 02 — thin black vertical seam between content and video */}
+      {/* Vertical seam between left content panel and right video */}
       <motion.div
         className="slide1-divider"
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
         style={{
-          position: 'absolute',
-          left: '46%',
-          top: '92px',
+          position: "absolute",
+          left: "46%",
+          top: "64px",
           bottom: 0,
-          width: '1px',
-          background: '#111111',
-          transformOrigin: 'top',
+          width: "1px",
+          background: "#111111",
+          transformOrigin: "top",
           zIndex: 10,
         }}
       />
@@ -349,12 +327,12 @@ function Slide1({ onOpenAssessment }) {
       <div
         className="slide1-bubbles"
         style={{
-          position: 'absolute',
+          position: "absolute",
           top: 0,
           left: 0,
-          right: '54%',
+          right: "54%",
           bottom: 0,
-          pointerEvents: 'none',
+          pointerEvents: "none",
           zIndex: 1,
         }}
       >
@@ -363,16 +341,16 @@ function Slide1({ onOpenAssessment }) {
             key={i}
             custom={i}
             variants={bubbleVariants}
-            initial={{ y: '110vh' }}
+            initial={{ y: "110vh" }}
             animate="animate"
             style={{
-              position: 'absolute',
+              position: "absolute",
               width: `${Math.random() * 120 + 100}px`,
               height: `${Math.random() * 120 + 100}px`,
-              borderRadius: '50%',
+              borderRadius: "50%",
               background:
-                'radial-gradient(circle at 30% 30%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.01) 100%)',
-              filter: 'blur(8px)',
+                "radial-gradient(circle at 30% 30%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.01) 100%)",
+              filter: "blur(8px)",
             }}
           />
         ))}
@@ -382,32 +360,75 @@ function Slide1({ onOpenAssessment }) {
       <div
         className="slide1-left-panel"
         style={{
-          width: '46%',
-          height: '100%',
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '92px 60px 40px 80px',
+          width: "46%",
+          height: "100%",
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "64px 60px 40px 80px",
           zIndex: 3,
+          overflow: "hidden",
         }}
       >
+        {/* Background Video — Philoneos ambient particles (Restricted strictly to the top hero section) */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "48%",
+            pointerEvents: "none",
+            zIndex: 0,
+            overflow: "hidden",
+          }}
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            src="/philoneos-hero-bg.mp4"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.85,
+            }}
+          />
+          {/* Smooth fade to pure white at the bottom of the first section */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              height: "60%",
+              background:
+                "linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.95) 75%, #FFFFFF 100%)",
+            }}
+          />
+        </div>
+
         <motion.h1
           className="slide1-title"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
           style={{
-            fontSize: '79px',
+            position: "relative",
+            zIndex: 2,
+            fontSize: "79px",
             lineHeight: 1.1,
             fontWeight: 900,
-            textTransform: 'uppercase',
-            color: '#111111',
-            marginBottom: '16px',
-            letterSpacing: '-0.04em',
+            textTransform: "uppercase",
+            color: "#111111",
+            marginBottom: "16px",
+            letterSpacing: "-0.04em",
           }}
         >
-          Realise <span style={{ color: 'var(--accent-purple)' }}>Value</span>{' '}
+          Create <span style={{ color: "var(--accent-purple)" }}>Value</span>{" "}
           With AI
         </motion.h1>
 
@@ -417,14 +438,26 @@ function Slide1({ onOpenAssessment }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
           style={{
-            maxWidth: '580px',
-            marginBottom: '64px',
-            fontSize: '20px',
-            color: '#2F2F2F',
+            position: "relative",
+            zIndex: 2,
+            maxWidth: "580px",
+            marginBottom: "64px",
+            fontSize: "20px",
+            color: "#2F2F2F",
             fontWeight: 500,
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            lineHeight: 1.2,
           }}
         >
-          AI & Technology Pathway
+          <span>Philoneos meets ScaleTech</span>
+          <Handshake
+            size={24}
+            color="#FF3F50"
+            strokeWidth={1.8}
+            style={{ flexShrink: 0 }}
+          />
         </motion.p>
 
         {/* Horizontal divider above Our Vision — full width, extending out of padding */}
@@ -434,12 +467,12 @@ function Slide1({ onOpenAssessment }) {
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.9 }}
           style={{
-            width: 'calc(100% + 140px)',
-            height: '1px',
-            background: '#111111',
-            transformOrigin: 'left',
-            marginTop: '0px',
-            marginLeft: '-80px',
+            width: "calc(100% + 140px)",
+            height: "1px",
+            background: "#111111",
+            transformOrigin: "left",
+            marginTop: "0px",
+            marginLeft: "-80px",
           }}
         />
 
@@ -450,109 +483,109 @@ function Slide1({ onOpenAssessment }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
           style={{
-            background: 'transparent',
-            marginTop: '30px',
-            marginLeft: '-20px',
-            padding: '0 32px 0 18px',
-            borderLeft: '2px solid var(--accent-purple)',
-            maxWidth: '580px',
+            background: "transparent",
+            marginTop: "30px",
+            marginLeft: "-20px",
+            padding: "0 32px 0 18px",
+            borderLeft: "2px solid var(--accent-purple)",
+            maxWidth: "580px",
           }}
         >
-          <div className="text-small-label" style={{ marginBottom: '12px' }}>
+          <div className="text-small-label" style={{ marginBottom: "12px" }}>
             VISION
           </div>
           <p className="text-body">
-            To enable learners to explore, experiment, implement AI integrated
-            solution that create meaningful value for their organisations.
+            To enable participants to explore, experiment, implement AI integrated solution that create meaningful value for Philoneos as an organization, for Philoneos customers or your side gig.
           </p>
         </motion.div>
 
         {/* Assessment details & Start Survey button */}
-        <motion.div
+        {/* <motion.div
           className="slide1-assessment"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.1 }}
           style={{
-            position: 'absolute',
-            bottom: '40px',
-            left: '80px',
-            right: '60px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
+            position: "absolute",
+            bottom: "40px",
+            left: "80px",
+            right: "60px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
           }}
         >
           <p
             style={{
-              fontSize: '17px',
+              fontSize: "17px",
               fontWeight: 500,
-              color: '#111111',
-              marginBottom: '24px',
+              color: "#111111",
+              marginBottom: "24px",
               lineHeight: 1.4,
             }}
           >
-            Discover where AI can create the greatest value for you or your
-            organisation.
+            Discover and create an impact with Your idea, Let's reinvent
+            tradition with AI
           </p>
 
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '20px',
-              justifyContent: 'center',
+              display: "flex",
+              alignItems: "center",
+              gap: "20px",
+              justifyContent: "center",
             }}
           >
             <motion.button
-              onClick={onOpenAssessment}
+              onClick={onExplore}
               style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '10px',
-                height: '52px',
-                padding: '18px 32px',
-                borderRadius: '0px',
-                background: '#6C3BFF',
-                color: 'white',
-                fontSize: '18px',
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                height: "52px",
+                padding: "18px 32px",
+                borderRadius: "0px",
+                background: "#FF3F50",
+                color: "white",
+                fontSize: "18px",
                 fontWeight: 600,
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(108,59,255,0.18)',
-                transition: 'all 250ms ease',
+                border: "1px solid #FF3F50",
+                cursor: "pointer",
+                boxShadow: "0 10px 30px rgba(255, 63, 80, 0.25)",
+                transition: "all 250ms ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#5A2EF5';
-                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.background = "#e53a48";
+                e.currentTarget.style.borderColor = "#e53a48";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = '#6C3BFF';
-                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.background = "#FF3F50";
+                e.currentTarget.style.borderColor = "#FF3F50";
+                e.currentTarget.style.transform = "translateY(0)";
               }}
-              aria-label="Start Survey"
+              aria-label="Let's Explore"
             >
-              Start Survey <ArrowRight size={20} />
+              Let's Explore <ArrowRight size={20} />
             </motion.button>
             <span
-              style={{ fontSize: '14px', color: '#777777', fontWeight: 500 }}
+              style={{ fontSize: "14px", color: "#777777", fontWeight: 500 }}
             >
               Estimated time: 3–5 Minutes
             </span>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
 
       {/* Right Media Area (54%) — clean full-height canvas, edge-to-edge, no dividers over it */}
       <div
         className="slide1-right-panel"
         style={{
-          width: '54%',
-          position: 'absolute',
+          width: "54%",
+          position: "absolute",
           right: 0,
-          top: '92px',
+          top: "64px",
           bottom: 0,
           zIndex: 2,
         }}
@@ -563,22 +596,22 @@ function Slide1({ onOpenAssessment }) {
           loop
           muted
           playsInline
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
 
         {/* Dark Gradient Overlay */}
         <div
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
             background:
-              'linear-gradient(to right, rgba(10,10,15,0.82) 0%, rgba(10,10,15,0.55) 50%, rgba(10,10,15,0.25) 100%)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            pointerEvents: 'none',
+              "linear-gradient(to right, rgba(10,10,15,0.82) 0%, rgba(10,10,15,0.55) 50%, rgba(10,10,15,0.25) 100%)",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            pointerEvents: "none",
             zIndex: 1,
           }}
         />
@@ -587,21 +620,143 @@ function Slide1({ onOpenAssessment }) {
         <div
           className="slide1-carousel-container"
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            padding: '90px 90px 90px 70px',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "90px 90px 90px 70px",
             zIndex: 2,
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div style={{ maxWidth: '520px', position: 'relative' }}>
+          {/* Section 1: the challenge journey. Static by design - it animates
+              in once and then holds, so only the carousel below rotates. */}
+          <div
+            className="slide1-journey-grid"
+            style={{
+              display: "flex",
+              gap: "20px",
+              marginBottom: "40px",
+              paddingBottom: "40px",
+              borderBottom: "1px solid rgba(255,255,255,0.16)",
+            }}
+          >
+            {journeyStages.map((stage, i) => (
+              <motion.div
+                key={stage.label}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.35 + i * 0.12,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                whileHover={{
+                  y: -4,
+                  borderColor: "rgba(255,63,80,0.85)",
+                  backgroundColor: "rgba(255,63,80,0.10)",
+                  transition: { duration: 0.25, ease: "easeOut" },
+                }}
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  padding: "18px 18px 20px",
+                  border: "1px solid rgba(255,255,255,0.16)",
+                  backgroundColor: "rgba(255,255,255,0.05)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <stage.Icon size={20} strokeWidth={1.5} color="#ffffff" />
+                  <span
+                    style={{
+                      fontFamily: "GT America Mono, monospace",
+                      fontSize: "12px",
+                      letterSpacing: "2px",
+                      color: "rgba(255,255,255,0.5)",
+                    }}
+                  >
+                    {stage.label}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    fontSize: "15px",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: "#FF3F50",
+                  }}
+                >
+                  {stage.title}
+                </div>
+
+                <div
+                  style={{
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    color: "#ffffff",
+                    lineHeight: 1.35,
+                  }}
+                >
+                  {stage.subtitle}
+                </div>
+
+                <ul
+                  style={{
+                    listStyle: "none",
+                    margin: 0,
+                    padding: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
+                  {stage.points.map((point) => (
+                    <li
+                      key={point}
+                      style={{
+                        display: "flex",
+                        gap: "8px",
+                        alignItems: "flex-start",
+                        fontSize: "13px",
+                        lineHeight: 1.45,
+                        color: "rgba(255,255,255,0.78)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          marginTop: "6px",
+                          minWidth: "5px",
+                          height: "5px",
+                          borderRadius: "50%",
+                          background: "#FF3F50",
+                        }}
+                      />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Section 2: the rotating insight carousel, unchanged */}
+          <div style={{ maxWidth: "520px", position: "relative" }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeOverlaySlide}
@@ -612,11 +767,11 @@ function Slide1({ onOpenAssessment }) {
               >
                 <div
                   style={{
-                    fontFamily: 'GT America Mono, monospace',
-                    fontSize: '14px',
-                    letterSpacing: '2px',
-                    color: '#6F3FF5',
-                    marginBottom: '24px',
+                    fontFamily: "GT America Mono, monospace",
+                    fontSize: "14px",
+                    letterSpacing: "2px",
+                    color: "#FF3F50",
+                    marginBottom: "24px",
                   }}
                 >
                   {overlaySlides[activeOverlaySlide].label}
@@ -625,15 +780,15 @@ function Slide1({ onOpenAssessment }) {
                 <h2
                   className="slide1-carousel-headline"
                   style={{
-                    fontFamily: 'GT America Bold, sans-serif',
-                    fontSize: '30px',
-                    color: 'white',
+                    fontFamily: "GT America Bold, sans-serif",
+                    fontSize: "30px",
+                    color: "white",
                     lineHeight: 1.15,
-                    letterSpacing: '-0.02em',
-                    maxWidth: '480px',
-                    marginBottom: '24px',
-                    fontWeight: 'bold',
-                    textTransform: 'initial',
+                    letterSpacing: "-0.02em",
+                    maxWidth: "480px",
+                    marginBottom: "24px",
+                    fontWeight: "bold",
+                    textTransform: "initial",
                   }}
                 >
                   {overlaySlides[activeOverlaySlide].headline}
@@ -648,11 +803,11 @@ function Slide1({ onOpenAssessment }) {
                     ease: [0.215, 0.61, 0.355, 1],
                   }}
                   style={{
-                    fontFamily: 'GT America Regular, sans-serif',
-                    fontSize: '14px',
-                    color: 'rgba(255,255,255,0.88)',
+                    fontFamily: "GT America Regular, sans-serif",
+                    fontSize: "14px",
+                    color: "rgba(255,255,255,0.88)",
                     lineHeight: 1.6,
-                    maxWidth: '470px',
+                    maxWidth: "470px",
                   }}
                 >
                   {overlaySlides[activeOverlaySlide].body}
@@ -666,34 +821,53 @@ function Slide1({ onOpenAssessment }) {
         <div
           className="slide1-carousel-indicator"
           style={{
-            position: 'absolute',
-            bottom: '40px',
-            left: '70px',
-            display: 'flex',
-            gap: '12px',
-            alignItems: 'center',
-            fontFamily: 'GT America Mono, monospace',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            letterSpacing: '2px',
+            position: "absolute",
+            bottom: "40px",
+            left: "70px",
+            display: "flex",
+            gap: "12px",
+            alignItems: "center",
+            fontFamily: "GT America Mono, monospace",
+            fontSize: "18px",
+            fontWeight: "bold",
+            letterSpacing: "2px",
             zIndex: 2,
           }}
         >
           {overlaySlides.map((slide, index) => (
             <React.Fragment key={slide.label}>
               <motion.span
+                role="button"
+                tabIndex={0}
+                aria-label={`Show insight ${slide.label}`}
+                aria-current={activeOverlaySlide === index}
+                onClick={() => setActiveOverlaySlide(index)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setActiveOverlaySlide(index);
+                  }
+                }}
                 animate={{
                   color:
                     activeOverlaySlide === index
-                      ? '#6F3FF5'
-                      : 'rgba(255,255,255,0.7)',
+                      ? "#FF3F50"
+                      : "rgba(255,255,255,0.7)",
                 }}
+                whileHover={{ color: "#FF3F50", y: -2 }}
+                whileTap={{ scale: 0.94 }}
                 transition={{ duration: 0.3 }}
+                style={{
+                  cursor: "pointer",
+                  padding: "4px 6px",
+                  userSelect: "none",
+                  outline: "none",
+                }}
               >
                 {slide.label}
               </motion.span>
               {index < overlaySlides.length - 1 && (
-                <span style={{ color: 'rgba(255,255,255,0.7)' }}>—</span>
+                <span style={{ color: "rgba(255,255,255,0.7)" }}>—</span>
               )}
             </React.Fragment>
           ))}
@@ -724,39 +898,23 @@ function Slide2() {
   return (
     <div
       style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'flex',
-        background: '#ffffff',
-        overflow: 'hidden',
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        display: "flex",
+        background: "#ffffff",
+        overflow: "hidden",
       }}
     >
-      {/* Horizontal Divider (animates in) */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        style={{
-          position: 'absolute',
-          top: '120px',
-          left: 0,
-          right: 0,
-          height: '1px',
-          background: '#111111',
-          transformOrigin: 'left',
-          zIndex: 10,
-        }}
-      />
 
       {/* Main Content Container */}
       <div
         style={{
           flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: '120px 80px 40px 80px',
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "120px 80px 40px 80px",
           zIndex: 3,
         }}
       >
@@ -765,39 +923,37 @@ function Slide2() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-          style={{ marginBottom: '60px' }}
+          style={{ marginBottom: "60px" }}
         >
-          <div className="text-small-label" style={{ marginBottom: '16px' }}>
+          <div className="text-small-label" style={{ marginBottom: "16px" }}>
             OUR FRAMEWORK
           </div>
           <h1
             style={{
-              fontSize: '72px',
+              fontSize: "72px",
               lineHeight: 0.9,
               fontWeight: 900,
-              textTransform: 'uppercase',
-              color: '#111111',
-              maxWidth: '520px',
-              letterSpacing: '-0.04em',
+              textTransform: "uppercase",
+              color: "#111111",
+              maxWidth: "520px",
+              letterSpacing: "-0.04em",
               margin: 0,
             }}
           >
-            AI VALUE
-            <br />
-            DELIVERY
+            IDEA
             <br />
             LIFECYCLE
           </h1>
         </motion.div>
 
         {/* Bottom Section (Cards + Feedback on left, Video on right) */}
-        <div style={{ display: 'flex', gap: '60px' }}>
+        <div style={{ display: "flex", gap: "60px" }}>
           {/* Left Side (60%) */}
           <div
             style={{
-              flex: '0 0 calc(60% - 30px)',
-              display: 'flex',
-              flexDirection: 'column',
+              flex: "0 0 calc(60% - 30px)",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             {/* Lifecycle Area */}
@@ -806,36 +962,36 @@ function Slide2() {
               initial="hidden"
               animate="show"
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
               }}
             >
               {/* Top Stages */}
               <div
-                style={{ display: 'flex', gap: '30px', position: 'relative' }}
+                style={{ display: "flex", gap: "30px", position: "relative" }}
               >
                 {/* Stage 01 */}
                 <motion.div
                   variants={itemVariants}
                   style={{
                     flex: 1,
-                    position: 'relative',
-                    border: '1px solid #111111',
-                    borderRadius: '0px',
-                    background: '#ffffff',
-                    padding: '32px 28px',
-                    display: 'flex',
-                    flexDirection: 'column',
+                    position: "relative",
+                    border: "1px solid #111111",
+                    borderRadius: "0px",
+                    background: "#ffffff",
+                    padding: "32px 28px",
+                    display: "flex",
+                    flexDirection: "column",
                     zIndex: 1,
                   }}
                 >
                   <div
                     style={{
-                      position: 'absolute',
-                      top: '50%',
-                      right: '-23px',
-                      transform: 'translateY(-50%)',
+                      position: "absolute",
+                      top: "50%",
+                      right: "-23px",
+                      transform: "translateY(-50%)",
                       zIndex: 2,
                     }}
                   >
@@ -843,21 +999,21 @@ function Slide2() {
                   </div>
                   <div
                     style={{
-                      position: 'absolute',
-                      bottom: '-32px',
-                      left: '50%',
-                      width: '1px',
-                      height: '16px',
-                      borderLeft: '1px dashed #111111',
+                      position: "absolute",
+                      bottom: "-32px",
+                      left: "50%",
+                      width: "1px",
+                      height: "16px",
+                      borderLeft: "1px dashed #111111",
                       zIndex: 0,
                     }}
                   >
                     <div
                       style={{
-                        position: 'absolute',
-                        left: '-1px',
-                        top: '-6px',
-                        transform: 'translateX(-50%)',
+                        position: "absolute",
+                        left: "-1px",
+                        top: "-6px",
+                        transform: "translateX(-50%)",
                       }}
                     >
                       <ChevronUp size={16} strokeWidth={2} color="#111111" />
@@ -865,54 +1021,54 @@ function Slide2() {
                   </div>
                   <div
                     style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      border: '1px solid #111111',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '24px',
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      border: "1px solid #111111",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: "24px",
                     }}
                   >
                     <Search size={24} strokeWidth={1} color="#111111" />
                   </div>
                   <div
                     style={{
-                      fontSize: '14px',
+                      fontSize: "14px",
                       fontWeight: 600,
-                      color: '#111111',
-                      marginBottom: '8px',
+                      color: "#111111",
+                      marginBottom: "8px",
                     }}
                   >
                     01
                   </div>
                   <h3
                     style={{
-                      fontSize: '18px',
+                      fontSize: "18px",
                       fontWeight: 700,
-                      color: '#111111',
-                      marginBottom: '12px',
+                      color: "#111111",
+                      marginBottom: "12px",
                     }}
                   >
                     Value Discovery
                   </h3>
                   <p className="text-card-desc">
-                    Identify{' '}
+                    Identify{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       business needs
                     </span>
-                    ,{' '}
+                    ,{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       pain points
                     </span>
-                    , and{' '}
+                    , and{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       opportunities
                     </span>
@@ -925,22 +1081,22 @@ function Slide2() {
                   variants={itemVariants}
                   style={{
                     flex: 1,
-                    position: 'relative',
-                    border: '1px solid #111111',
-                    borderRadius: '0px',
-                    background: '#ffffff',
-                    padding: '32px 28px',
-                    display: 'flex',
-                    flexDirection: 'column',
+                    position: "relative",
+                    border: "1px solid #111111",
+                    borderRadius: "0px",
+                    background: "#ffffff",
+                    padding: "32px 28px",
+                    display: "flex",
+                    flexDirection: "column",
                     zIndex: 1,
                   }}
                 >
                   <div
                     style={{
-                      position: 'absolute',
-                      top: '50%',
-                      right: '-23px',
-                      transform: 'translateY(-50%)',
+                      position: "absolute",
+                      top: "50%",
+                      right: "-23px",
+                      transform: "translateY(-50%)",
                       zIndex: 2,
                     }}
                   >
@@ -948,54 +1104,54 @@ function Slide2() {
                   </div>
                   <div
                     style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      border: '1px solid #111111',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '24px',
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      border: "1px solid #111111",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: "24px",
                     }}
                   >
                     <Lightbulb size={24} strokeWidth={1} color="#111111" />
                   </div>
                   <div
                     style={{
-                      fontSize: '14px',
+                      fontSize: "14px",
                       fontWeight: 600,
-                      color: '#111111',
-                      marginBottom: '8px',
+                      color: "#111111",
+                      marginBottom: "8px",
                     }}
                   >
                     02
                   </div>
                   <h3
                     style={{
-                      fontSize: '18px',
+                      fontSize: "18px",
                       fontWeight: 700,
-                      color: '#111111',
-                      marginBottom: '12px',
+                      color: "#111111",
+                      marginBottom: "12px",
                     }}
                   >
                     Opportunity Identification
                   </h3>
                   <p className="text-card-desc">
-                    Translate{' '}
+                    Translate{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       insights
-                    </span>{' '}
-                    into{' '}
+                    </span>{" "}
+                    into{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       actionable opportunities
-                    </span>{' '}
-                    and{' '}
+                    </span>{" "}
+                    and{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       use cases
                     </span>
@@ -1008,33 +1164,33 @@ function Slide2() {
                   variants={itemVariants}
                   style={{
                     flex: 1,
-                    position: 'relative',
-                    border: '1px solid #111111',
-                    borderRadius: '0px',
-                    background: '#ffffff',
-                    padding: '32px 28px',
-                    display: 'flex',
-                    flexDirection: 'column',
+                    position: "relative",
+                    border: "1px solid #111111",
+                    borderRadius: "0px",
+                    background: "#ffffff",
+                    padding: "32px 28px",
+                    display: "flex",
+                    flexDirection: "column",
                     zIndex: 1,
                   }}
                 >
                   <div
                     style={{
-                      position: 'absolute',
-                      bottom: '-32px',
-                      left: '50%',
-                      width: '1px',
-                      height: '16px',
-                      borderLeft: '1px dashed #111111',
+                      position: "absolute",
+                      bottom: "-32px",
+                      left: "50%",
+                      width: "1px",
+                      height: "16px",
+                      borderLeft: "1px dashed #111111",
                       zIndex: 0,
                     }}
                   >
                     <div
                       style={{
-                        position: 'absolute',
-                        left: '-1px',
-                        bottom: '-4px',
-                        transform: 'translate(-50%, 50%)',
+                        position: "absolute",
+                        left: "-1px",
+                        bottom: "-4px",
+                        transform: "translate(-50%, 50%)",
                       }}
                     >
                       <ChevronDown size={16} strokeWidth={2} color="#111111" />
@@ -1042,54 +1198,54 @@ function Slide2() {
                   </div>
                   <div
                     style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      border: '1px solid #111111',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginBottom: '24px',
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "50%",
+                      border: "1px solid #111111",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: "24px",
                     }}
                   >
                     <Settings size={24} strokeWidth={1} color="#111111" />
                   </div>
                   <div
                     style={{
-                      fontSize: '14px',
+                      fontSize: "14px",
                       fontWeight: 600,
-                      color: '#111111',
-                      marginBottom: '8px',
+                      color: "#111111",
+                      marginBottom: "8px",
                     }}
                   >
                     03
                   </div>
                   <h3
                     style={{
-                      fontSize: '18px',
+                      fontSize: "18px",
                       fontWeight: 700,
-                      color: '#111111',
-                      marginBottom: '12px',
+                      color: "#111111",
+                      marginBottom: "12px",
                     }}
                   >
                     Implementation
                   </h3>
                   <p className="text-card-desc">
-                    Execute solutions using{' '}
+                    Execute solutions using{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       AI
                     </span>
-                    ,{' '}
+                    ,{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       automation
                     </span>
-                    , or{' '}
+                    , or{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       product development
                     </span>
@@ -1102,23 +1258,23 @@ function Slide2() {
               <motion.div
                 variants={itemVariants}
                 style={{
-                  position: 'relative',
-                  width: '100%',
-                  marginTop: '40px',
+                  position: "relative",
+                  width: "100%",
+                  marginTop: "40px",
                 }}
               >
                 {/* Feedback Box */}
                 <div
                   style={{
-                    position: 'relative',
-                    width: '100%',
-                    background: '#ffffff',
-                    border: '1px solid #111111',
-                    borderRadius: '0px',
-                    padding: '32px 40px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
+                    position: "relative",
+                    width: "100%",
+                    background: "#ffffff",
+                    border: "1px solid #111111",
+                    borderRadius: "0px",
+                    padding: "32px 40px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                     zIndex: 1,
                   }}
                 >
@@ -1126,30 +1282,30 @@ function Slide2() {
                     size={28}
                     strokeWidth={1}
                     color="#111111"
-                    style={{ marginBottom: '12px' }}
+                    style={{ marginBottom: "12px" }}
                   />
                   <div
                     style={{
-                      fontSize: '18px',
+                      fontSize: "18px",
                       fontWeight: 700,
-                      color: '#111111',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      marginBottom: '8px',
+                      color: "#111111",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      marginBottom: "8px",
                     }}
                   >
                     Agile Feedback Loop
                   </div>
                   <div className="text-card-desc">
-                    Continuously optimize based on{' '}
+                    Continuously optimize based on{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       real-time feedback
-                    </span>{' '}
-                    and{' '}
+                    </span>{" "}
+                    and{" "}
                     <span
-                      style={{ color: 'var(--accent-purple)', fontWeight: 700 }}
+                      style={{ color: "var(--accent-purple)", fontWeight: 700 }}
                     >
                       outcomes
                     </span>
@@ -1161,22 +1317,22 @@ function Slide2() {
           </div>
 
           {/* Right Side (Video) */}
-          <div style={{ flex: 1, display: 'flex' }}>
+          <div style={{ flex: 1, display: "flex" }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
               style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: '4px',
-                overflow: 'hidden',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-                border: '2px solid #ffffff',
-                backgroundColor: '#000000',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                width: "100%",
+                height: "100%",
+                borderRadius: "4px",
+                overflow: "hidden",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+                border: "2px solid #ffffff",
+                backgroundColor: "#000000",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <video
@@ -1185,7 +1341,7 @@ function Slide2() {
                 loop
                 muted
                 playsInline
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
             </motion.div>
           </div>
@@ -1195,7 +1351,7 @@ function Slide2() {
   );
 }
 
-function Slide3() {
+function Slide3({ onOpenAssessment }) {
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
@@ -1218,47 +1374,30 @@ function Slide3() {
     show: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 1.2, ease: 'easeOut' },
+      transition: { duration: 1.2, ease: "easeOut" },
     },
   };
 
   return (
     <div
       style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        background: '#ffffff',
-        overflow: 'hidden',
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        background: "#ffffff",
+        overflow: "hidden",
       }}
     >
-      {/* Horizontal Divider (animates in) */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        style={{
-          position: 'absolute',
-          top: '120px',
-          left: 0,
-          right: 0,
-          height: '1px',
-          background: '#111111',
-          transformOrigin: 'left',
-          zIndex: 10,
-        }}
-      />
 
       {/* Main Content Area */}
       <div
         style={{
           flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '160px 80px 60px 80px',
+          display: "flex",
+          flexDirection: "column",
+          padding: "160px 80px 60px 80px",
           zIndex: 3,
         }}
       >
@@ -1268,46 +1407,46 @@ function Slide3() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-          style={{ marginBottom: '100px' }}
+          style={{ marginBottom: "100px" }}
         >
-          <div className="text-small-label" style={{ marginBottom: '16px' }}>
-            ToU PATHWAY
+          <div className="text-small-label" style={{ marginBottom: "16px" }}>
+            INNOVATION PATHWAY
           </div>
           <h1
             style={{
-              fontSize: '72px',
+              fontSize: "72px",
               lineHeight: 0.9,
               fontWeight: 900,
-              textTransform: 'uppercase',
-              color: '#111111',
-              letterSpacing: '-0.04em',
+              textTransform: "uppercase",
+              color: "#111111",
+              letterSpacing: "-0.04em",
               margin: 0,
             }}
           >
-            COMMUNITY
+            CHALLENGE
             <br />
             JOURNEY
           </h1>
         </motion.div>
 
         {/* Pathway Area */}
-        <div style={{ position: 'relative', flex: 1 }}>
+        <div style={{ position: "relative", flex: 1 }}>
           {/* Ghost Background Typography */}
           <div
             style={{
-              position: 'absolute',
-              top: '-85px',
-              left: '-10px',
-              right: '60px',
-              display: 'flex',
-              justifyContent: 'space-between',
+              position: "absolute",
+              top: "-85px",
+              left: "-10px",
+              right: "60px",
+              display: "flex",
+              justifyContent: "space-between",
               zIndex: -2,
-              pointerEvents: 'none',
-              color: '#F2F2F2',
-              fontSize: '76px',
+              pointerEvents: "none",
+              color: "#F2F2F2",
+              fontSize: "76px",
               fontWeight: 900,
-              letterSpacing: '0.04em',
-              whiteSpace: 'nowrap',
+              letterSpacing: "0.04em",
+              whiteSpace: "nowrap",
             }}
           >
             <div>DISCOVER</div>
@@ -1322,13 +1461,13 @@ function Slide3() {
             viewport={{ once: true }}
             transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
             style={{
-              position: 'absolute',
-              top: '15px',
-              left: '0',
-              right: '0',
-              height: '2px',
-              background: '#111111',
-              transformOrigin: 'left',
+              position: "absolute",
+              top: "15px",
+              left: "0",
+              right: "0",
+              height: "2px",
+              background: "#111111",
+              transformOrigin: "left",
               zIndex: 0,
             }}
           />
@@ -1337,11 +1476,11 @@ function Slide3() {
             variants={containerVariants}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, margin: '-50px' }}
+            viewport={{ once: true, margin: "-50px" }}
             style={{
-              display: 'flex',
-              gap: '60px',
-              position: 'relative',
+              display: "flex",
+              gap: "60px",
+              position: "relative",
               zIndex: 1,
             }}
           >
@@ -1349,23 +1488,23 @@ function Slide3() {
             <div
               style={{
                 flex: 1,
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
               <motion.div
                 variants={ghostNumberVariants}
                 style={{
-                  position: 'absolute',
-                  top: '100px',
-                  right: '0px',
-                  fontSize: '320px',
+                  position: "absolute",
+                  top: "100px",
+                  right: "0px",
+                  fontSize: "320px",
                   fontWeight: 900,
-                  color: '#f7f7f7',
+                  color: "#f7f7f7",
                   lineHeight: 0.8,
                   zIndex: -1,
-                  pointerEvents: 'none',
+                  pointerEvents: "none",
                 }}
               >
                 01
@@ -1374,28 +1513,28 @@ function Slide3() {
               {/* Node */}
               <div
                 style={{
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: '60px',
+                  height: "32px",
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "60px",
                 }}
               >
                 <motion.div
                   initial={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#111111',
+                    backgroundColor: "#ffffff",
+                    borderColor: "#111111",
                   }}
                   whileInView={{
-                    backgroundColor: '#6E1EEF',
-                    borderColor: '#6E1EEF',
+                    backgroundColor: "#FF3F50",
+                    borderColor: "#FF3F50",
                   }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.8, duration: 0.4 }}
                   style={{
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    border: '2px solid #111111',
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    border: "2px solid #111111",
                     zIndex: 2,
                   }}
                 />
@@ -1408,57 +1547,57 @@ function Slide3() {
               <motion.h2
                 variants={itemVariants}
                 style={{
-                  fontSize: '34px',
+                  fontSize: "34px",
                   fontWeight: 700,
-                  color: '#6E1EEF',
-                  marginTop: '24px',
-                  marginBottom: '16px',
+                  color: "#FF3F50",
+                  marginTop: "24px",
+                  marginBottom: "16px",
                   lineHeight: 1.1,
                 }}
               >
-                Awareness
+                Discover
               </motion.h2>
 
               <motion.div
                 variants={itemVariants}
                 className="text-subheading"
-                style={{ marginBottom: '32px' }}
+                style={{ marginBottom: "32px" }}
               >
-                Building the right AI mindset
+                Building the right Idea
               </motion.div>
 
               <ul
                 style={{
-                  listStyle: 'none',
+                  listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '16px',
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
                 }}
               >
                 {[
-                  'AI trends & emerging technologies',
-                  'Practical AI awareness sessions',
-                  'Industry insights & expert talks',
-                  'Understanding opportunities and limitations',
+                  "Submit your idea",
+                  "Evaluations by Steering Committee",
+                  "Idea Approvals",
+                  "Identify team formations",
                 ].map((text, i) => (
                   <motion.li
                     variants={itemVariants}
                     key={i}
                     style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '12px',
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "12px",
                     }}
                   >
                     <div
                       style={{
-                        marginTop: '8px',
-                        minWidth: '6px',
-                        height: '6px',
-                        background: '#6E1EEF',
-                        borderRadius: '50%',
+                        marginTop: "8px",
+                        minWidth: "6px",
+                        height: "6px",
+                        background: "#FF3F50",
+                        borderRadius: "50%",
                       }}
                     ></div>
                     <span className="text-body">{text}</span>
@@ -1471,23 +1610,23 @@ function Slide3() {
             <div
               style={{
                 flex: 1,
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
               <motion.div
                 variants={ghostNumberVariants}
                 style={{
-                  position: 'absolute',
-                  top: '100px',
-                  right: '0px',
-                  fontSize: '320px',
+                  position: "absolute",
+                  top: "100px",
+                  right: "0px",
+                  fontSize: "320px",
                   fontWeight: 900,
-                  color: '#f7f7f7',
+                  color: "#f7f7f7",
                   lineHeight: 0.8,
                   zIndex: -1,
-                  pointerEvents: 'none',
+                  pointerEvents: "none",
                 }}
               >
                 02
@@ -1496,28 +1635,28 @@ function Slide3() {
               {/* Node */}
               <div
                 style={{
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: '60px',
+                  height: "32px",
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "60px",
                 }}
               >
                 <motion.div
                   initial={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#111111',
+                    backgroundColor: "#ffffff",
+                    borderColor: "#111111",
                   }}
                   whileInView={{
-                    backgroundColor: '#6E1EEF',
-                    borderColor: '#6E1EEF',
+                    backgroundColor: "#FF3F50",
+                    borderColor: "#FF3F50",
                   }}
                   viewport={{ once: true }}
                   transition={{ delay: 1.1, duration: 0.4 }}
                   style={{
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    border: '2px solid #111111',
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    border: "2px solid #111111",
                     zIndex: 2,
                   }}
                 />
@@ -1530,58 +1669,58 @@ function Slide3() {
               <motion.h2
                 variants={itemVariants}
                 style={{
-                  fontSize: '34px',
+                  fontSize: "34px",
                   fontWeight: 700,
-                  color: '#6E1EEF',
-                  marginTop: '24px',
-                  marginBottom: '16px',
+                  color: "#FF3F50",
+                  marginTop: "24px",
+                  marginBottom: "16px",
                   lineHeight: 1.1,
                 }}
               >
-                Exploration
+                Identify
               </motion.h2>
 
               <motion.div
                 variants={itemVariants}
                 className="text-subheading"
-                style={{ marginBottom: '32px' }}
+                style={{ marginBottom: "32px" }}
               >
                 Learning through experimentation
               </motion.div>
 
               <ul
                 style={{
-                  listStyle: 'none',
+                  listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '16px',
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
                 }}
               >
                 {[
-                  'Hands-on AI workshops',
-                  'AI Agent Creation Labs',
-                  'Use case brainstorming',
-                  'Prompt engineering & workflow design',
-                  'Community collaboration',
+                  "Hands-on POC AI workshops",
+                  "AI Agent Creation Labs",
+                  "Use case brainstorming",
+                  "Prompt engineering & workflow design",
+                  "Scaletech Plus Philoneos Team collaboration",
                 ].map((text, i) => (
                   <motion.li
                     variants={itemVariants}
                     key={i}
                     style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '12px',
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "12px",
                     }}
                   >
                     <div
                       style={{
-                        marginTop: '8px',
-                        minWidth: '6px',
-                        height: '6px',
-                        background: '#6E1EEF',
-                        borderRadius: '50%',
+                        marginTop: "8px",
+                        minWidth: "6px",
+                        height: "6px",
+                        background: "#FF3F50",
+                        borderRadius: "50%",
                       }}
                     ></div>
                     <span className="text-body">{text}</span>
@@ -1594,23 +1733,23 @@ function Slide3() {
             <div
               style={{
                 flex: 1,
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
               <motion.div
                 variants={ghostNumberVariants}
                 style={{
-                  position: 'absolute',
-                  top: '100px',
-                  right: '0',
-                  fontSize: '320px',
+                  position: "absolute",
+                  top: "100px",
+                  right: "0",
+                  fontSize: "320px",
                   fontWeight: 900,
-                  color: '#f7f7f7',
+                  color: "#f7f7f7",
                   lineHeight: 0.8,
                   zIndex: -1,
-                  pointerEvents: 'none',
+                  pointerEvents: "none",
                 }}
               >
                 03
@@ -1619,28 +1758,28 @@ function Slide3() {
               {/* Node */}
               <div
                 style={{
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  marginBottom: '60px',
+                  height: "32px",
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "60px",
                 }}
               >
                 <motion.div
                   initial={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#111111',
+                    backgroundColor: "#ffffff",
+                    borderColor: "#111111",
                   }}
                   whileInView={{
-                    backgroundColor: '#6E1EEF',
-                    borderColor: '#6E1EEF',
+                    backgroundColor: "#FF3F50",
+                    borderColor: "#FF3F50",
                   }}
                   viewport={{ once: true }}
                   transition={{ delay: 1.4, duration: 0.4 }}
                   style={{
-                    width: '12px',
-                    height: '12px',
-                    borderRadius: '50%',
-                    border: '2px solid #111111',
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    border: "2px solid #111111",
                     zIndex: 2,
                   }}
                 />
@@ -1653,58 +1792,58 @@ function Slide3() {
               <motion.h2
                 variants={itemVariants}
                 style={{
-                  fontSize: '34px',
+                  fontSize: "34px",
                   fontWeight: 700,
-                  color: '#6E1EEF',
-                  marginTop: '24px',
-                  marginBottom: '16px',
+                  color: "#FF3F50",
+                  marginTop: "24px",
+                  marginBottom: "16px",
                   lineHeight: 1.1,
                 }}
               >
-                Implementation
+                Implement
               </motion.h2>
 
               <motion.div
                 variants={itemVariants}
                 className="text-subheading"
-                style={{ marginBottom: '32px' }}
+                style={{ marginBottom: "32px" }}
               >
                 Turning ideas into real impact
               </motion.div>
 
               <ul
                 style={{
-                  listStyle: 'none',
+                  listStyle: "none",
                   padding: 0,
                   margin: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '16px',
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
                 }}
               >
                 {[
-                  'Build practical AI solutions',
-                  'Live demonstrations',
-                  'Real business use cases',
-                  'Peer reviews & knowledge sharing',
-                  'Continuous mentoring & guidance',
+                  "Build practical AI solutions",
+                  "Live demonstrations",
+                  "Real business use cases",
+                  "Peer reviews & knowledge sharing",
+                  "Continuous mentoring & guidance",
                 ].map((text, i) => (
                   <motion.li
                     variants={itemVariants}
                     key={i}
                     style={{
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '12px',
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "12px",
                     }}
                   >
                     <div
                       style={{
-                        marginTop: '8px',
-                        minWidth: '6px',
-                        height: '6px',
-                        background: '#6E1EEF',
-                        borderRadius: '50%',
+                        marginTop: "8px",
+                        minWidth: "6px",
+                        height: "6px",
+                        background: "#FF3F50",
+                        borderRadius: "50%",
                       }}
                     ></div>
                     <span className="text-body">{text}</span>
@@ -1715,6 +1854,57 @@ function Slide3() {
           </motion.div>
         </div>
       </div>
+
+      {/* Bottom-right CTA. Absolutely placed rather than in flow: the pathway
+          columns above already run down to y=980 of the 1080px stage, so an
+          in-flow button would be pushed past the bottom edge and clipped.
+          This keeps every existing element at exactly the same position. */}
+      <motion.div
+        className="slide3-cta"
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.9 }}
+        style={{
+          position: "absolute",
+          right: "80px",
+          bottom: "28px",
+          zIndex: 5,
+        }}
+      >
+        <button
+          onClick={onOpenAssessment}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "10px",
+            height: "48px",
+            padding: "0 28px",
+            borderRadius: "0px",
+            background: "#FF3F50",
+            color: "white",
+            fontSize: "16px",
+            fontWeight: 600,
+            fontFamily: "inherit",
+            border: "1px solid #FF3F50",
+            cursor: "pointer",
+            boxShadow: "0 8px 24px rgba(255, 63, 80, 0.22)",
+            transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+         onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#e53a48";
+                e.currentTarget.style.borderColor = "#e53a48";
+              }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.boxShadow =
+              "0 8px 24px rgba(255, 63, 80, 0.22)";
+          }}
+          aria-label="Submit your Idea"
+        >
+          Submit your Idea <ArrowRight size={18} />
+        </button>
+      </motion.div>
     </div>
   );
 }
@@ -1722,33 +1912,33 @@ function Slide3() {
 function Slide4() {
   const activities = [
     {
-      title: 'Community Events',
-      desc: 'Host workshops, expert talks, panels, and collaborative discussions.',
+      title: "Community Events",
+      desc: "Host workshops, expert talks, panels, and collaborative discussions.",
       Icon: Users,
     },
     {
-      title: 'AI Agent Creation',
-      desc: 'Guide learners in designing and building AI agents for practical scenarios.',
+      title: "AI Agent Creation",
+      desc: "Guide learners in designing and building AI agents for practical scenarios.",
       Icon: Bot,
     },
     {
-      title: 'AI Use Case',
-      desc: 'Brainstorm and validate AI opportunities for real business challenges.',
+      title: "AI Use Case",
+      desc: "Brainstorm and validate AI opportunities for real business challenges.",
       Icon: Lightbulb,
     },
     {
-      title: 'Mentorship',
-      desc: 'Support learners through office hours, implementation guidance, and peer learning.',
+      title: "Mentorship",
+      desc: "Support learners through office hours, implementation guidance, and peer learning.",
       Icon: MessageSquare,
     },
     {
-      title: 'Community Knowledge',
-      desc: 'Curate articles, AI updates, Slack discussions, and learning resources.',
+      title: "Community Knowledge",
+      desc: "Curate articles, AI updates, Slack discussions, and learning resources.",
       Icon: Book,
     },
     {
-      title: 'Live Demonstrations',
-      desc: 'Showcase practical AI implementations and real-world success stories.',
+      title: "Live Demonstrations",
+      desc: "Showcase practical AI implementations and real-world success stories.",
       Icon: Presentation,
     },
   ];
@@ -1756,39 +1946,22 @@ function Slide4() {
   return (
     <div
       style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        background: '#ffffff',
-        overflow: 'hidden',
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        background: "#ffffff",
+        overflow: "hidden",
       }}
     >
-      {/* Horizontal Divider */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        style={{
-          position: 'absolute',
-          top: '120px',
-          left: 0,
-          right: 0,
-          height: '1px',
-          background: '#111111',
-          transformOrigin: 'left',
-          zIndex: 10,
-        }}
-      />
 
       <div
         style={{
           flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '140px 80px 40px 80px',
+          display: "flex",
+          flexDirection: "column",
+          padding: "140px 80px 40px 80px",
           zIndex: 3,
         }}
       >
@@ -1798,19 +1971,19 @@ function Slide4() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-          style={{ marginBottom: '24px' }}
+          style={{ marginBottom: "24px" }}
         >
-          <div className="text-small-label" style={{ marginBottom: '16px' }}>
+          <div className="text-small-label" style={{ marginBottom: "16px" }}>
             COMMUNITY ACTIVITIES
           </div>
           <h1
             style={{
-              fontSize: '56px',
+              fontSize: "56px",
               lineHeight: 0.9,
               fontWeight: 900,
-              textTransform: 'uppercase',
-              color: '#111111',
-              letterSpacing: '-0.04em',
+              textTransform: "uppercase",
+              color: "#111111",
+              letterSpacing: "-0.04em",
               margin: 0,
             }}
           >
@@ -1821,14 +1994,14 @@ function Slide4() {
         </motion.div>
 
         {/* Content Area */}
-        <div style={{ display: 'flex', flex: 1, gap: '40px', minHeight: 0 }}>
+        <div style={{ display: "flex", flex: 1, gap: "40px", minHeight: 0 }}>
           {/* Left Grid (60%) */}
           <div
             style={{
-              flex: '0 0 60%',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '16px',
+              flex: "0 0 60%",
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "16px",
             }}
           >
             {activities.map((act, i) => (
@@ -1843,25 +2016,25 @@ function Slide4() {
                   delay: 0.4 + i * 0.1,
                 }}
                 style={{
-                  border: '1px solid #111111',
-                  borderRadius: '0px',
-                  padding: '24px',
-                  background: '#ffffff',
-                  position: 'relative',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
+                  border: "1px solid #111111",
+                  borderRadius: "0px",
+                  padding: "24px",
+                  background: "#ffffff",
+                  position: "relative",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
-                <div style={{ marginBottom: '16px', color: '#111111' }}>
+                <div style={{ marginBottom: "16px", color: "#111111" }}>
                   <act.Icon size={28} strokeWidth={1} color="currentColor" />
                 </div>
                 <h3
                   style={{
-                    fontSize: '20px',
+                    fontSize: "20px",
                     fontWeight: 700,
-                    color: '#111111',
-                    marginBottom: '12px',
+                    color: "#111111",
+                    marginBottom: "12px",
                     lineHeight: 1.1,
                   }}
                 >
@@ -1869,13 +2042,13 @@ function Slide4() {
                 </h3>
                 <div
                   style={{
-                    width: '24px',
-                    height: '1px',
-                    background: '#6E1EEF',
-                    marginBottom: '12px',
+                    width: "24px",
+                    height: "1px",
+                    background: "#FF3F50",
+                    marginBottom: "12px",
                   }}
                 />
-                <p className="text-card-desc" style={{ paddingRight: '12px' }}>
+                <p className="text-card-desc" style={{ paddingRight: "12px" }}>
                   {act.desc}
                 </p>
               </motion.div>
@@ -1890,11 +2063,11 @@ function Slide4() {
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
             style={{
               flex: 1,
-              position: 'relative',
-              borderRadius: '0px',
-              overflow: 'hidden',
-              background: '#f5f5f5',
-              border: '1px solid #111111',
+              position: "relative",
+              borderRadius: "0px",
+              overflow: "hidden",
+              background: "#f5f5f5",
+              border: "1px solid #111111",
             }}
           >
             <video
@@ -1903,7 +2076,7 @@ function Slide4() {
               loop
               muted
               playsInline
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </motion.div>
         </div>
@@ -1916,51 +2089,34 @@ function Slide5() {
   return (
     <div
       style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        background: '#ffffff',
-        overflow: 'hidden',
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        background: "#ffffff",
+        overflow: "hidden",
       }}
     >
-      {/* Horizontal Divider */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        whileInView={{ scaleX: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-        style={{
-          position: 'absolute',
-          top: '120px',
-          left: 0,
-          right: 0,
-          height: '1px',
-          background: '#111111',
-          transformOrigin: 'left',
-          zIndex: 10,
-        }}
-      />
 
       <div
         style={{
           flex: 1,
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '180px 80px 40px 80px',
+          display: "flex",
+          justifyContent: "center",
+          padding: "180px 80px 40px 80px",
           zIndex: 3,
-          gap: '80px',
+          gap: "80px",
         }}
       >
         {/* Left Side (Fixed Width) */}
         <div
           style={{
-            flex: '0 0 600px',
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            paddingRight: '0px',
+            flex: "0 0 600px",
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            paddingRight: "0px",
           }}
         >
           <motion.div
@@ -1971,14 +2127,14 @@ function Slide5() {
           >
             <h1
               style={{
-                fontSize: '56px',
+                fontSize: "56px",
                 lineHeight: 0.9,
                 fontWeight: 900,
-                textTransform: 'uppercase',
-                color: '#111111',
-                letterSpacing: '-0.04em',
+                textTransform: "uppercase",
+                color: "#111111",
+                letterSpacing: "-0.04em",
                 margin: 0,
-                marginBottom: '60px',
+                marginBottom: "60px",
               }}
             >
               WE WILL DELIVER
@@ -1989,19 +2145,19 @@ function Slide5() {
 
           <ul
             style={{
-              listStyle: 'none',
+              listStyle: "none",
               padding: 0,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
+              display: "flex",
+              flexDirection: "column",
+              gap: "24px",
             }}
           >
             {[
-              'help every participant understand AI',
-              'provide practical experimentation',
-              'share real business use cases',
-              'build an AI community',
-              'help ambassadors contribute back',
+              "help every participant understand AI",
+              "provide practical experimentation",
+              "share real business use cases",
+              "build an AI community",
+              "help ambassadors contribute back",
             ].map((text, i) => (
               <motion.li
                 key={i}
@@ -2010,12 +2166,12 @@ function Slide5() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.4 + i * 0.1 }}
                 style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '16px',
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "16px",
                 }}
               >
-                <div style={{ marginTop: '6px' }}>
+                <div style={{ marginTop: "6px" }}>
                   <ArrowRight size={16} color="var(--accent-purple)" />
                 </div>
                 <span className="text-body">{text}</span>
@@ -2025,30 +2181,30 @@ function Slide5() {
 
           <div
             style={{
-              marginTop: '60px',
-              paddingTop: '40px',
-              borderTop: '1px solid #e5e5e5',
+              marginTop: "60px",
+              paddingTop: "40px",
+              borderTop: "1px solid #e5e5e5",
             }}
           >
-            <div className="text-small-label" style={{ marginBottom: '16px' }}>
+            <div className="text-small-label" style={{ marginBottom: "16px" }}>
               THE JOURNEY
             </div>
             <div
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '16px',
-                flexWrap: 'wrap',
+                display: "flex",
+                alignItems: "center",
+                gap: "16px",
+                flexWrap: "wrap",
               }}
             >
               <span
-                style={{ fontWeight: 600, fontSize: '18px', color: '#111111' }}
+                style={{ fontWeight: 600, fontSize: "18px", color: "#111111" }}
               >
                 Understanding
               </span>
               <ArrowRight size={16} color="var(--accent-purple)" />
               <span
-                style={{ fontWeight: 600, fontSize: '18px', color: '#111111' }}
+                style={{ fontWeight: 600, fontSize: "18px", color: "#111111" }}
               >
                 Experimentation
               </span>
@@ -2056,8 +2212,8 @@ function Slide5() {
               <span
                 style={{
                   fontWeight: 600,
-                  fontSize: '18px',
-                  color: 'var(--accent-purple)',
+                  fontSize: "18px",
+                  color: "var(--accent-purple)",
                 }}
               >
                 Community Impact
@@ -2073,16 +2229,16 @@ function Slide5() {
           viewport={{ once: true }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
           style={{
-            width: '600px',
-            flex: '0 0 600px',
-            alignSelf: 'flex-start',
-            backgroundColor: 'var(--accent-purple)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '60px',
-            borderRadius: '0px',
+            width: "600px",
+            flex: "0 0 600px",
+            alignSelf: "flex-start",
+            backgroundColor: "var(--accent-purple)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "60px",
+            borderRadius: "0px",
           }}
         >
           {/* Photograph Container */}
@@ -2091,16 +2247,16 @@ function Slide5() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
           >
             <img
               src="/graduation.jfif"
               alt="Graduation"
               style={{
-                width: '100%',
-                height: 'auto',
-                border: '1px solid rgba(255, 255, 255, 0.4)',
-                display: 'block',
+                width: "100%",
+                height: "auto",
+                border: "1px solid rgba(255, 255, 255, 0.4)",
+                display: "block",
               }}
             />
           </motion.div>
@@ -2111,53 +2267,53 @@ function Slide5() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 1 }}
-            style={{ textAlign: 'center', marginTop: '32px' }}
+            style={{ textAlign: "center", marginTop: "32px" }}
           >
             <div
               style={{
-                fontSize: '28px',
+                fontSize: "28px",
                 fontWeight: 900,
-                color: '#ffffff',
-                marginBottom: '4px',
+                color: "#ffffff",
+                marginBottom: "4px",
               }}
             >
               Rakesh Gondaliya
             </div>
             <div
               style={{
-                fontSize: '15px',
+                fontSize: "15px",
                 fontWeight: 500,
-                color: '#ffffff',
-                marginBottom: '16px',
+                color: "#ffffff",
+                marginBottom: "16px",
               }}
             >
               Co-Founder &amp; CTO at ScaleTech Solutions
             </div>
             <div
               style={{
-                fontSize: '20px',
+                fontSize: "20px",
                 fontWeight: 700,
-                color: '#ffffff',
-                marginBottom: '8px',
+                color: "#ffffff",
+                marginBottom: "8px",
               }}
             >
               Professional Master's in SET
             </div>
             <div
               style={{
-                fontSize: '15px',
+                fontSize: "15px",
                 fontWeight: 500,
-                color: 'rgba(255, 255, 255, 0.85)',
-                marginBottom: '4px',
+                color: "rgba(255, 255, 255, 0.85)",
+                marginBottom: "4px",
               }}
             >
               Tomorrow University of Applied Sciences
             </div>
             <div
               style={{
-                fontSize: '14px',
+                fontSize: "14px",
                 fontWeight: 400,
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: "rgba(255, 255, 255, 0.7)",
               }}
             >
               Graduated June 2026

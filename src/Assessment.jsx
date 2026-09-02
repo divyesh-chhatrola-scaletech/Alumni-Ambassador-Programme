@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { submitAssessment } from './excelStore';
+import PhiloneosHeader from './PhiloneosHeader';
 
 const questions = [
   {
@@ -65,96 +66,216 @@ const questions = [
   {
     id: 5,
     type: 'long-text',
-    question: 'What kinds of problems or tasks would you most like to use Agentic AI to solve?',
+    question: ' Please provide a problem statement that you are trying to solve with your use case.',
     placeholder: 'Tell us about the problems or tasks you would like to solve...',
   },
   {
     id: 6,
-    type: 'single',
-    question: 'How are you most interested in using Agentic AI?',
-    options: [
-      'For personal/individual use – to improve my own productivity, learning, research, creativity, etc.',
-      'For a small team – to support collaboration and automate tasks within a team',
-      'For organizational/company workflows – to integrate AI agents into processes used by multiple people',
-      'Both personal use and company/team workflows',
-      'I’m not sure yet – I’d like to explore the possibilities',
-      'Other',
-    ],
+    type: 'long-text',
+    question: 'How your idea will help users?',
+    placeholder: 'Tell us about the the idea and how it will help users...',
   },
+  // {
+  //   id: 6,
+  //   type: 'single',
+  //   question: 'How are you most interested in using Agentic AI?',
+  //   options: [
+  //     'For personal/individual use – to improve my own productivity, learning, research, creativity, etc.',
+  //     'For a small team – to support collaboration and automate tasks within a team',
+  //     'For organizational/company workflows – to integrate AI agents into processes used by multiple people',
+  //     'Both personal use and company/team workflows',
+  //     'I’m not sure yet – I’d like to explore the possibilities',
+  //     'Other',
+  //   ],
+  // },
   {
     id: 7,
-    type: 'multiple',
-    maxSelect: 3,
-    subtitle: 'Select up to 3 options',
-    question: 'Where would you most like to create more time, capacity or opportunity?',
+    type: 'single',
+    question: 'This idea is targeted for',
     options: [
-      'Focusing on higher-value work',
-      'Spending more time with customers, members or users',
-      'Supporting and developing people',
-      'Working on strategy and important decisions',
-      'Creating or improving products/services',
-      'Exploring new ideas and opportunities',
-      'Improving how the organisation operates',
-      'I am not sure yet',
+'Philoneos organization',
+'Philoneos customers',
+'New Philoneos Sales Funnel',
+'Other'
     ],
   },
+  // {
+  //   id: 7,
+  //   type: 'multiple',
+  //   maxSelect: 3,
+  //   subtitle: 'Select up to 3 options',
+  //   question: 'Where would you most like to create more time, capacity or opportunity?',
+  //   options: [
+  //     'Focusing on higher-value work',
+  //     'Spending more time with customers, members or users',
+  //     'Supporting and developing people',
+  //     'Working on strategy and important decisions',
+  //     'Creating or improving products/services',
+  //     'Exploring new ideas and opportunities',
+  //     'Improving how the organisation operates',
+  //     'I am not sure yet',
+  //   ],
+  // },
   {
     id: 8,
-    type: 'multiple',
-    maxSelect: 3,
-    subtitle: 'Select up to 3 options',
-    question: 'What usually gets in the way when you want to improve something in your work or organisation?',
-    options: [
-      'Not knowing where to start',
-      'Finding the right approach',
-      'Lack of time',
-      'Lack of skills or expertise',
-      'Getting others on board',
-      'Cost or resources',
-      'Data, privacy or security concerns',
-      'Not seeing a clear enough benefit',
-    ],
-  },
-  {
-    id: 9,
-    type: 'single',
-    question: 'How are you currently addressing these areas?',
-    options: [
-      "We haven't addressed them yet",
-      'We are discussing possible improvements',
-      'We are already trying different approaches',
-      'We have introduced changes and are seeing results',
-      'We are continuously improving them',
-      'Not applicable',
-    ],
-  },
-  {
-    id: 10,
-    type: 'multiple',
-    maxSelect: 3,
-    subtitle: 'Select up to 3 options',
-    question: 'What do you hope to gain from participating in the Agentic AI Circle?',
-    options: [
-      'Practical AI skills',
-      'Knowledge about emerging AI technologies',
-      'Experience building AI projects',
-      'A portfolio/project to showcase',
-      'Skills useful for my studies',
-      'Skills useful for my future career',
-      'Entrepreneurship/startup ideas',
-      'Collaboration with other students',
-      'Networking with AI professionals',
-      'Understanding the risks and responsible use of AI',
-      'Other',
-    ],
-  },
-  {
-    id: 11,
     type: 'long-text',
-    question: 'If you could choose one thing for the Agentic AI Circle help you build, what would it be?',
-    placeholder: 'Tell us about the biggest challenge or opportunity you would like to improve...',
+    question: 'What are the success metrics of your idea?',
+    placeholder: 'Tell us about the success metrics of your idea...',
   },
+   {
+    id: 9,
+    type: 'long-text',
+    question: 'What is your adoption strategy on post development?',
+    placeholder: 'Tell us about the success metrics of your idea...',
+  },
+  // {
+  //   id: 8,
+  //   type: 'multiple',
+  //   maxSelect: 3,
+  //   subtitle: 'Select up to 3 options',
+  //   question: 'What usually gets in the way when you want to improve something in your work or organisation?',
+  //   options: [
+  //     'Not knowing where to start',
+  //     'Finding the right approach',
+  //     'Lack of time',
+  //     'Lack of skills or expertise',
+  //     'Getting others on board',
+  //     'Cost or resources',
+  //     'Data, privacy or security concerns',
+  //     'Not seeing a clear enough benefit',
+  //   ],
+  // },
+  // {
+  //   id: 9,
+  //   type: 'single',
+  //   question: 'How are you currently addressing these areas?',
+  //   options: [
+  //     "We haven't addressed them yet",
+  //     'We are discussing possible improvements',
+  //     'We are already trying different approaches',
+  //     'We have introduced changes and are seeing results',
+  //     'We are continuously improving them',
+  //     'Not applicable',
+  //   ],
+  // },
+  // {
+  //   id: 10,
+  //   type: 'multiple',
+  //   maxSelect: 3,
+  //   subtitle: 'Select up to 3 options',
+  //   question: 'What do you hope to gain from participating in the Agentic AI Circle?',
+  //   options: [
+  //     'Practical AI skills',
+  //     'Knowledge about emerging AI technologies',
+  //     'Experience building AI projects',
+  //     'A portfolio/project to showcase',
+  //     'Skills useful for my studies',
+  //     'Skills useful for my future career',
+  //     'Entrepreneurship/startup ideas',
+  //     'Collaboration with other students',
+  //     'Networking with AI professionals',
+  //     'Understanding the risks and responsible use of AI',
+  //     'Other',
+  //   ],
+  // },
+  // {
+  //   id: 11,
+  //   type: 'long-text',
+  //   question: 'If you could choose one thing for the Agentic AI Circle help you build, what would it be?',
+  //   placeholder: 'Tell us about the biggest challenge or opportunity you would like to improve...',
+  // },
 ];
+
+/**
+ * Animated success mark for the thank-you screen: the ring draws itself,
+ * the tick follows, two halo rings keep pulsing, and the whole thing
+ * lifts and brightens on hover.
+ */
+function SuccessMark() {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+      style={{ width: '104px', height: '104px', position: 'relative' }}
+    >
+      <motion.div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        animate={{ scale: hovered ? 1.07 : 1, y: hovered ? -3 : 0 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        style={{ position: 'absolute', inset: 0, cursor: 'pointer' }}
+      >
+        {/* soft coral glow, brighter under the cursor */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: '-16px',
+            borderRadius: '50%',
+            background:
+              'radial-gradient(circle, rgba(255,63,80,0.38) 0%, rgba(255,63,80,0) 70%)',
+            opacity: hovered ? 1 : 0.55,
+            transition: 'opacity 300ms ease',
+          }}
+        />
+
+        {/* two rings breathing outwards, offset so one is always mid-flight */}
+        {[0, 1].map((i) => (
+          <motion.span
+            key={i}
+            initial={{ scale: 0.65, opacity: 0.5 }}
+            animate={{ scale: 1.55, opacity: 0 }}
+            transition={{
+              duration: 2.8,
+              delay: i * 1.4,
+              repeat: Infinity,
+              ease: 'easeOut',
+            }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '50%',
+              border: '1px solid rgba(255,63,80,0.7)',
+            }}
+          />
+        ))}
+
+        <svg
+          viewBox="0 0 104 104"
+          width="104"
+          height="104"
+          fill="none"
+          style={{ position: 'relative', display: 'block' }}
+        >
+          <circle cx="52" cy="52" r="37" fill="rgba(255,63,80,0.12)" />
+          <motion.circle
+            cx="52"
+            cy="52"
+            r="37"
+            stroke="#FF3F50"
+            strokeWidth="2.5"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 0.95, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{ rotate: -90, transformOrigin: '52px 52px' }}
+          />
+          <motion.path
+            d="M36 53.5 L47 64.5 L69 40.5"
+            stroke="#ffffff"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.9, ease: 'easeOut' }}
+          />
+        </svg>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export default function AssessmentOverlay({ onClose }) {
   const [currentStep, setCurrentStep] = useState(1);
@@ -165,7 +286,7 @@ export default function AssessmentOverlay({ onClose }) {
   const [contactInfo, setContactInfo] = useState({
     name: '',
     email: '',
-    company: '',
+    phone: '',
     linkedin: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -322,9 +443,9 @@ export default function AssessmentOverlay({ onClose }) {
 
   const buttonVariants = {
     hover: {
-      backgroundColor: '#5A2EF5',
+      backgroundColor: '#E62D3E',
       y: -2,
-      boxShadow: '0 10px 30px rgba(108,59,255,0.18)',
+      boxShadow: '0 10px 30px rgba(255,63,80,0.18)',
       transition: { duration: 0.25, ease: 'easeOut' },
     },
   };
@@ -358,6 +479,43 @@ export default function AssessmentOverlay({ onClose }) {
         fontFamily: 'GT America Regular, sans-serif',
       }}
     >
+      {/* Same nav bar as the deck, so it is present on every page. Both the
+          logo and the ScaleTech block return to the presentation. */}
+      <PhiloneosHeader inFlow onLogoClick={onClose} onAction={onClose} />
+
+      {/* Thank-you background: the philoneos.com/impulse hero film, with a
+          scrim so the copy on top stays readable. Mounted only on the final
+          step, so the questions never pay for the download. */}
+      {currentStep === thankYouStep && (
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            backgroundColor: '#111111',
+            overflow: 'hidden',
+          }}
+        >
+          <video
+            src="/philoneos-impulse-hero.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(90deg, rgba(10,10,10,0.86) 0%, rgba(10,10,10,0.66) 50%, rgba(10,10,10,0.42) 100%)',
+            }}
+          />
+        </div>
+      )}
+
       {/* Main Content Area */}
       <main
         className="assessment-main"
@@ -371,6 +529,7 @@ export default function AssessmentOverlay({ onClose }) {
           padding: '40px 60px 24px 60px',
           position: 'relative',
           overflow: 'hidden',
+          zIndex: 1,
         }}
       >
         {/* Mobile-only hint that the options list scrolls further down */}
@@ -430,10 +589,10 @@ export default function AssessmentOverlay({ onClose }) {
                       fontSize: '13px',
                       color: '#666666',
                       fontWeight: 500,
-                      backgroundColor: '#F5F3FF',
+                      backgroundColor: '#FFF1F2',
                       padding: '2px 10px',
                       borderRadius: '12px',
-                      border: '1px solid #EAE6FF',
+                      border: '1px solid #FFDCE0',
                     }}
                   >
                     {(selectedOptions[questions[currentStep - 1].id] || []).length} /{' '}
@@ -489,8 +648,8 @@ export default function AssessmentOverlay({ onClose }) {
                           whileHover={
                             !isMaxReached
                               ? {
-                                  backgroundColor: isSelected ? '#F4F0FF' : '#FAF8FF',
-                                  boxShadow: isSelected ? 'inset 0 0 0 1px #6C3BFF' : 'inset 0 0 0 1px #CFC2FF',
+                                  backgroundColor: isSelected ? '#FFEDEF' : '#FFFBF5',
+                                  boxShadow: isSelected ? 'inset 0 0 0 1px #FF3F50' : 'inset 0 0 0 1px #FFC4CB',
                                 }
                               : {}
                           }
@@ -500,13 +659,13 @@ export default function AssessmentOverlay({ onClose }) {
                             width: '100%',
                             boxSizing: 'border-box',
                             padding: '24px 32px',
-                            backgroundColor: isSelected ? '#F4F0FF' : '#ffffff',
+                            backgroundColor: isSelected ? '#FFEDEF' : '#ffffff',
                             border: '1px solid #EAEAEA',
-                            boxShadow: isSelected ? 'inset 0 0 0 1px #6C3BFF' : 'none',
+                            boxShadow: isSelected ? 'inset 0 0 0 1px #FF3F50' : 'none',
                             borderRadius: '0px',
                             fontSize: '18px',
                             fontWeight: 'normal',
-                            color: isSelected ? '#6C3BFF' : isMaxReached ? '#999999' : '#2F2F2F',
+                            color: isSelected ? '#FF3F50' : isMaxReached ? '#999999' : '#2F2F2F',
                             cursor: isMaxReached ? 'not-allowed' : 'pointer',
                             opacity: isMaxReached ? 0.65 : 1,
                             transition: 'background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease',
@@ -516,7 +675,7 @@ export default function AssessmentOverlay({ onClose }) {
                           }}
                         >
                           {opt}
-                          {isSelected && <CheckCircle size={20} color="#6C3BFF" />}
+                          {isSelected && <CheckCircle size={20} color="#FF3F50" />}
                         </motion.button>
 
                         <AnimatePresence>
@@ -539,13 +698,13 @@ export default function AssessmentOverlay({ onClose }) {
                                   height: '56px',
                                   padding: '0 24px',
                                   backgroundColor: '#FAFAFA',
-                                  border: '2px solid #6C3BFF',
+                                  border: '2px solid #FF3F50',
                                   borderRadius: '0px',
                                   fontSize: '18px',
                                   fontFamily: 'inherit',
                                   color: '#111111',
                                   outline: 'none',
-                                  boxShadow: '0 0 0 4px rgba(108,59,255,0.1)',
+                                  boxShadow: '0 0 0 4px rgba(255,63,80,0.1)',
                                 }}
                               />
                             </motion.div>
@@ -579,8 +738,8 @@ export default function AssessmentOverlay({ onClose }) {
                     transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = '#6C3BFF';
-                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(108,59,255,0.1)';
+                    e.currentTarget.style.borderColor = '#FF3F50';
+                    e.currentTarget.style.boxShadow = '0 0 0 4px rgba(255,63,80,0.1)';
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.borderColor = '#EAEAEA';
@@ -697,15 +856,18 @@ export default function AssessmentOverlay({ onClose }) {
                       marginBottom: '8px',
                     }}
                   >
-                    Company / Organisation (Optional)
+                    Phone Number (Optional)
                   </label>
                   <input
-                    type="text"
-                    value={contactInfo.company}
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="+49 98765 43210"
+                    value={contactInfo.phone}
                     onChange={(e) =>
                       setContactInfo((prev) => ({
                         ...prev,
-                        company: e.target.value,
+                        phone: e.target.value,
                       }))
                     }
                     style={inputStyle}
@@ -771,98 +933,112 @@ export default function AssessmentOverlay({ onClose }) {
           {currentStep === thankYouStep && (
             <motion.div
               key="thankyou"
+              className="assessment-thankyou"
               variants={pageVariants}
               initial="initial"
               animate="animate"
               exit="exit"
               style={{
-                maxWidth: '960px',
-                textAlign: 'center',
+                width: '100%',
+                maxWidth: '1640px',
                 flex: 1,
                 minHeight: 0,
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
+                gap: '72px',
+                textAlign: 'left',
               }}
             >
-              <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{
-                  duration: 0.6,
-                  delay: 0.2,
-                  type: 'spring',
-                  stiffness: 200,
-                  damping: 20,
-                }}
+              {/* Left: confirmation, the impulse copy, and the way back */}
+              <div
                 style={{
-                  marginBottom: '32px',
+                  flex: '1 1 54%',
                   display: 'flex',
-                  justifyContent: 'center',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
                 }}
               >
-                <CheckCircle size={80} color="#6C3BFF" strokeWidth={1.5} />
-              </motion.div>
+                <div style={{ marginBottom: '32px' }}>
+                  <SuccessMark />
+                </div>
 
-              <h1
-                style={{
-                  fontSize: '42px',
-                  fontWeight: 900,
-                  color: '#111111',
-                  lineHeight: 1.1,
-                  letterSpacing: '-0.02em',
-                  marginBottom: '16px',
-                }}
-              >
-                Thank You!
-              </h1>
-              <p
-                style={{
-                  fontSize: '20px',
-                  fontWeight: 500,
-                  color: '#2F2F2F',
-                  marginBottom: '24px',
-                }}
-              >
-                Thank you for taking the time to share your thoughts with us.
-              </p>
-              <p
-                style={{
-                  fontSize: '18px',
-                  color: '#555555',
-                  marginBottom: '48px',
-                  lineHeight: 1.6,
-                  maxWidth: '700px',
-                }}
-              >
-                Your input is a great starting point to explore how AI can create meaningful value for you, your work,
-                or your organisation.
-                <br />
-                <br />
-                We look forward to connecting, exchanging ideas, and exploring what’s possible together.
-              </p>
 
-              <motion.button
-                onClick={onClose}
-                variants={buttonVariants}
-                whileHover="hover"
+                <p
+                  className="assessment-thankyou-impulse"
+                  style={{
+                    fontSize: '19px',
+                    fontWeight: 500,
+                    color: '#ffffff',
+                    lineHeight: 1.6,
+                    maxWidth: '640px',
+                    marginBottom: '36px',
+                    paddingLeft: '20px',
+                    borderLeft: '2px solid #FF3F50',
+                  }}
+                >
+                  FOMO (Fear of Missing Out) is the fear of missing out on something. Our insights will provide you with
+                  much-needed shifts in perspective that will finally shake you and your organization awake.
+                </p>
+
+                <motion.button
+                  onClick={onClose}
+                  whileHover={{ y: -2 }}
+                  style={{
+                    backgroundColor: '#FF3F50',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '0px',
+                    height: '52px',
+                    padding: '0 32px',
+                    fontSize: '18px',
+                    fontWeight: 600,
+                    fontFamily: 'inherit',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    boxShadow: '0 8px 24px rgba(255, 63, 80, 0.22)',
+                    transition: 'box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '0 16px 40px rgba(255, 63, 80, 0.45)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '0 8px 24px rgba(255, 63, 80, 0.22)';
+                  }}
+                >
+                  Back to Home
+                </motion.button>
+              </div>
+
+              {/* Right: the impulse headline, as it reads on philoneos.com */}
+              <div
+                className="assessment-thankyou-right"
                 style={{
-                  backgroundColor: '#6C3BFF',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '0px',
-                  height: '52px',
-                  padding: '0 32px',
-                  fontSize: '18px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
+                  flex: '1 1 46%',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
                 }}
               >
-                Back to Home
-              </motion.button>
+                <h2
+                  className="assessment-thankyou-headline"
+                  style={{
+                    fontSize: '96px',
+                    lineHeight: 0.95,
+                    fontWeight: 900,
+                    color: '#ffffff',
+                    textTransform: 'uppercase',
+                    letterSpacing: '-0.03em',
+                    textAlign: 'right',
+                    margin: 0,
+                  }}
+                >
+                  Your
+                  <br />
+                  FOMO Ends
+                  <br />
+                  With Us
+                </h2>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -925,7 +1101,7 @@ export default function AssessmentOverlay({ onClose }) {
             aria-label={currentStep === contactStep ? 'Finish' : 'Next'}
             className={`assessment-nav-btn ${currentStep === contactStep ? 'assessment-submit-btn' : ''}`}
             style={{
-              backgroundColor: isButtonDisabled ? '#EAEAEA' : '#6C3BFF',
+              backgroundColor: isButtonDisabled ? '#EAEAEA' : '#FF3F50',
               color: isButtonDisabled ? '#A0A0A0' : '#ffffff',
               border: 'none',
               borderRadius: '0px',
@@ -977,8 +1153,8 @@ const inputStyle = {
 };
 
 const handleInputFocus = (e) => {
-  e.currentTarget.style.borderColor = '#6C3BFF';
-  e.currentTarget.style.boxShadow = '0 0 0 4px rgba(108,59,255,0.1)';
+  e.currentTarget.style.borderColor = '#FF3F50';
+  e.currentTarget.style.boxShadow = '0 0 0 4px rgba(255,63,80,0.1)';
 };
 
 const handleInputBlur = (e) => {

@@ -1,7 +1,7 @@
 {
-  "name": "Realise Value With AI",
-  "short_name": "Realise Value With AI",
-  "description": "To enable learners to explore, experiment, implement AI integrated solution that create meaningful value for their organisations.",
+  "name": "Create Value With AI",
+  "short_name": "Create Value With AI",
+  "description": "To enable participants to explore, experiment, implement AI integrated solution that create meaningful value for Philoneos as an organization, for Philoneos customers or your side gig.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -14,7 +14,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#00A5CB",
-  "background_color": "#0B0F17",
+  "theme_color": "#FF3F50",
+  "background_color": "#FFFDFB",
   "display": "standalone"
 }

@@ -188,12 +188,154 @@
   border-radius: 4px;
 }
 
+/* Philoneos Header & ScaleTech Action Button */
+.philoneos-desktop-nav {
+  display: flex;
+  align-items: center;
+}
+
+.philoneos-nav-list {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.philoneos-nav-link {
+  font-family: var(--font-family);
+  font-size: 16px;
+  font-weight: 500;
+  color: #111111;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0;
+  position: relative;
+  transition: color 200ms ease;
+  letter-spacing: 0.01em;
+}
+
+.philoneos-nav-link:hover,
+.philoneos-nav-link.active {
+  color: #ff3f50;
+}
+
+.philoneos-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #ff3f50;
+  transition: width 200ms ease;
+}
+
+.philoneos-nav-link:hover::after,
+.philoneos-nav-link.active::after {
+  width: 100%;
+}
+
+.scaletech-header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 48px;
+  background-color: #ff3f50;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 0px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.scaletech-header-btn:hover {
+  background-color: #e53a48;
+  color: #ffffff;
+}
+
+.philoneos-logo-wrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-right: 60px;
+  border-right: 1px solid #111111;
+}
+
+.philoneos-mobile-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  color: #111111;
+  cursor: pointer;
+  padding: 4px;
+}
+
+/* Mobile Drawer Overlay */
+.philoneos-mobile-drawer {
+  position: fixed;
+  top: 72px;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  z-index: 99;
+}
+
+.philoneos-mobile-drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.philoneos-mobile-drawer-links button {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111111;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.philoneos-mobile-drawer-links button:hover {
+  color: #ff3f50;
+}
+
+.mobile-scaletech-btn {
+  margin-top: 12px;
+  background: #111111 !important;
+  color: #ffffff !important;
+  text-align: center !important;
+  padding: 14px !important;
+  font-weight: 600 !important;
+}
+
 @media (max-width: 768px) {
   body,
   #root {
     overflow: visible !important;
     height: auto !important;
     min-height: 100vh;
+  }
+
+  .philoneos-desktop-nav {
+    display: none !important;
+  }
+
+  .philoneos-mobile-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
   }
 
   /* #root is flex-centered (justify/align: center) for the desktop
@@ -226,19 +368,35 @@
     flex-direction: column !important; /* Force vertical stack! */
   }
 
+  /* Slide 3's "Submit your Idea" CTA is absolutely placed in the spare band
+     at the bottom of the desktop canvas. On mobile the slide is auto-height
+     and stacked, so put the button back in flow instead of letting it
+     overlay the content. */
+  .slide3-cta {
+    position: static !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    padding: 8px 24px 40px !important;
+  }
+
   .app-header {
     height: auto !important;
-    padding: 24px 24px 12px 24px !important; /* Clean top padding */
+    padding: 20px 24px !important; /* Clean top padding */
     background: #ffffff;
     position: relative !important; /* Participate in document flow */
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
+    align-items: center !important;
+    justify-content: space-between !important;
     z-index: 100 !important;
   }
 
   .app-header img {
-    height: 48px !important; /* Scale logo down slightly for mobile to prevent clipping */
-    margin-top: 8px !important;
+    height: 20px !important; /* Scaled Philoneos logo height for mobile */
+    margin-top: 0 !important;
+  }
+
+  .scaletech-header-btn {
+    padding: 8px 18px !important;
+    font-size: 13px !important;
   }
 
   /* Slide 1 Mobile Layout */
@@ -256,8 +414,26 @@
     width: 100% !important;
     position: relative !important;
     top: auto !important;
-    height: 600px !important; /* Large visual block that guarantees no content cutoff */
+    /* Grows with its content instead of a hard 600px: the panel now carries
+       the three stage cards plus the insight carousel, which is taller than
+       600px once the cards stack. */
+    height: auto !important;
+    min-height: 600px !important;
     bottom: auto !important;
+  }
+
+  /* With the panel auto-height, the film can no longer size itself off the
+     parent - pin it behind the content so it still covers the block. */
+  .slide1-right-panel > video {
+    position: absolute !important;
+    inset: 0 !important;
+    height: 100% !important;
+  }
+
+  /* ...and the content defines that height, so it must be in flow. */
+  .slide1-carousel-container {
+    position: relative !important;
+    padding: 40px 24px !important;
   }
 
   .slide1-divider {
@@ -311,12 +487,17 @@
     gap: 12px !important;
   }
 
-  .slide1-carousel-container {
-    padding: 40px 24px !important;
-  }
-
   .slide1-carousel-headline {
     font-size: 24px !important;
+  }
+
+  /* Hero panel section one: the three stage cards sit side by side on the
+     desktop canvas, but stack on a phone where 3 columns would be unreadable. */
+  .slide1-journey-grid {
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-bottom: 28px !important;
+    padding-bottom: 28px !important;
   }
 
   .assessment-options-grid {
@@ -331,6 +512,28 @@
   /* Assessment Overlay Mobile Adjustments */
   .assessment-main {
     padding: 24px 24px 16px 24px !important;
+  }
+
+  /* Thank-you screen: the desktop two-column split (copy left, impulse
+     headline right) stacks on mobile, and the headline drops to a size
+     that fits a phone width. */
+  .assessment-thankyou {
+    /* column-reverse so the stacked order reads headline -> copy -> button,
+       instead of stranding "Back to Home" in the middle of the page. */
+    flex-direction: column-reverse !important;
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+    gap: 32px !important;
+    overflow-y: auto !important;
+  }
+
+  .assessment-thankyou-right {
+    justify-content: flex-start !important;
+  }
+
+  .assessment-thankyou-headline {
+    font-size: 44px !important;
+    text-align: left !important;
   }
 
   /* Fade hint at the bottom of the question screen so it's clear the
@@ -365,7 +568,7 @@
     width: 40px !important;
     height: 40px !important;
   }
-  
+
   .assessment-submit-btn {
     width: auto !important;
     padding: 0 16px !important;
