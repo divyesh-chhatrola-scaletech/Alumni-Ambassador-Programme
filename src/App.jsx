@@ -502,12 +502,14 @@ function Slide1({ onExplore }) {
             VISION
           </div>
           <p className="text-body">
-            To enable participants to explore, experiment, implement AI integrated solution that create meaningful value for Philoneos as an organization, for Philoneos customers or your side gig.
+            To enable participants to explore, experiment, implement AI
+            integrated solution that create meaningful value for Philoneos as an
+            organization, for Philoneos customers or your side gig.
           </p>
         </motion.div>
 
         {/* Assessment details & Start Survey button */}
-        <motion.div
+        {/* <motion.div
           className="slide1-assessment"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -582,7 +584,7 @@ function Slide1({ onExplore }) {
               Estimated time: 3–5 Minutes
             </span>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
 
       {/* Right Media Area (54%) — clean full-height canvas, edge-to-edge, no dividers over it */}
@@ -913,7 +915,6 @@ function Slide2() {
         overflow: "hidden",
       }}
     >
-
       {/* Main Content Container */}
       <div
         style={{
@@ -1397,7 +1398,6 @@ function Slide3({ onOpenAssessment }) {
         overflow: "hidden",
       }}
     >
-
       {/* Main Content Area */}
       <div
         style={{
@@ -1899,10 +1899,10 @@ function Slide3({ onOpenAssessment }) {
             boxShadow: "0 8px 24px rgba(255, 63, 80, 0.22)",
             transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1)",
           }}
-         onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#e53a48";
-                e.currentTarget.style.borderColor = "#e53a48";
-              }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "#e53a48";
+            e.currentTarget.style.borderColor = "#e53a48";
+          }}
           onMouseLeave={(e) => {
             e.currentTarget.style.boxShadow =
               "0 8px 24px rgba(255, 63, 80, 0.22)";
@@ -1962,7 +1962,6 @@ function Slide4() {
         overflow: "hidden",
       }}
     >
-
       <div
         style={{
           flex: 1,
@@ -2105,7 +2104,6 @@ function Slide5() {
         overflow: "hidden",
       }}
     >
-
       <div
         style={{
           flex: 1,
