@@ -26,14 +26,13 @@ import "./App.css";
 import AssessmentOverlay from "./Assessment";
 import PhiloneosHeader from "./PhiloneosHeader";
 
-// Slides 4 & 5 ("Bringing Pathway To Life" and "We Will Deliver Impact") are
-// temporarily hidden from the UI. The Slide4/Slide5 components are intentionally
-// kept below — flip this flag to true to bring them back.
+// Slide2 ("Idea Lifecycle"), Slide4 & Slide5 are temporarily hidden from the UI.
+// The Slide components are intentionally kept below.
 const SHOW_EXTRA_SLIDES = false;
-const allSlides = [Slide1, Slide2, Slide3, Slide4, Slide5];
+const allSlides = [Slide1, Slide3, Slide4, Slide5];
 // The deck renders straight off this list, so a hidden slide can never leave a
 // blank screen behind — there is simply no index for it.
-const slides = SHOW_EXTRA_SLIDES ? allSlides : allSlides.slice(0, 3);
+const slides = SHOW_EXTRA_SLIDES ? allSlides : allSlides.slice(0, 2);
 const getIsMobile = () =>
   typeof window !== "undefined" && window.innerWidth <= 768;
 const getScale = () => {
@@ -112,6 +111,11 @@ export default function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const handleGoHome = () => {
+    setCurrentSlide(0);
+    setIsAssessmentOpen(false);
+  };
+
   return (
     <ResponsiveWrapper>
       <div
@@ -125,7 +129,7 @@ export default function App() {
       >
         {/* Philoneos nav bar (shared with the assessment overlay) */}
         <PhiloneosHeader
-          onLogoClick={() => setCurrentSlide(0)}
+          onLogoClick={handleGoHome}
           onAction={() => setIsAssessmentOpen(true)}
         />
 
@@ -214,7 +218,10 @@ export default function App() {
 
         <AnimatePresence>
           {isAssessmentOpen && (
-            <AssessmentOverlay onClose={() => setIsAssessmentOpen(false)} />
+            <AssessmentOverlay
+              onClose={() => setIsAssessmentOpen(false)}
+              onLogoClick={handleGoHome}
+            />
           )}
         </AnimatePresence>
       </div>
@@ -500,7 +507,7 @@ function Slide1({ onExplore }) {
         </motion.div>
 
         {/* Assessment details & Start Survey button */}
-        {/* <motion.div
+        <motion.div
           className="slide1-assessment"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -575,7 +582,7 @@ function Slide1({ onExplore }) {
               Estimated time: 3–5 Minutes
             </span>
           </div>
-        </motion.div> */}
+        </motion.div>
       </div>
 
       {/* Right Media Area (54%) — clean full-height canvas, edge-to-edge, no dividers over it */}

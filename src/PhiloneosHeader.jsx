@@ -45,12 +45,14 @@ export default function PhiloneosHeader({
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         className="philoneos-logo-wrapper"
+        onClick={onLogoClick}
         style={{
           display: "flex",
           alignItems: "center",
           height: "100%",
           paddingRight: "60px",
           borderRight: "1px solid #111111",
+          cursor: "pointer",
         }}
       >
         <img
