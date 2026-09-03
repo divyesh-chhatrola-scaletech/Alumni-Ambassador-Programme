@@ -151,6 +151,13 @@ button {
   color: #2f2f2f;
 }
 
+.content-detail-para {
+  font-size: clamp(14px, 1.15vw, 15px);
+  font-weight: 500;
+  line-height: 1.4;
+  color: #2f2f2f;
+}
+
 .text-subheading {
   font-size: clamp(24px, 1.5vw, 28px);
   font-weight: 600;
@@ -159,6 +166,14 @@ button {
 }
 
 .text-small-label {
+  font-size: clamp(15px, 1vw, 16px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #ff3f50;
+  text-transform: uppercase;
+}
+
+.heading-text {
   font-size: clamp(15px, 1vw, 16px);
   font-weight: 700;
   letter-spacing: 0.12em;

@@ -92,23 +92,24 @@ export default function App() {
   const activeSlide = Math.min(currentSlide, slides.length - 1);
   const ActiveSlide = slides[activeSlide];
 
+  // Page navigation logic (commented out for future use while other pages are hidden)
   const nextSlide = () => {
-    setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1));
+    // setCurrentSlide((prev) => Math.min(prev + 1, slides.length - 1));
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) =>
-      Math.max(Math.min(prev, slides.length - 1) - 1, 0),
-    );
+    // setCurrentSlide((prev) =>
+    //   Math.max(Math.min(prev, slides.length - 1) - 1, 0),
+    // );
   };
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowRight" || e.key === "Space") nextSlide();
-      if (e.key === "ArrowLeft") prevSlide();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    // const handleKeyDown = (e) => {
+    //   if (e.key === "ArrowRight" || e.key === "Space") nextSlide();
+    //   if (e.key === "ArrowLeft") prevSlide();
+    // };
+    // window.addEventListener("keydown", handleKeyDown);
+    // return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   const handleGoHome = () => {
@@ -260,19 +261,19 @@ function Slide1({ onExplore }) {
       label: "01",
       title: "Discover",
       Icon: Compass,
-      points: ["Idea Submission & Evaluation", "Team Formation"],
+      points: ["Idea submission & Selection", "Team Formation"],
     },
     {
       label: "02",
-      title: "Implement",
+      title: "Implement & Test",
       Icon: Rocket,
-      points: ["Build practical AI use cases", "Peer knowledge sharing"],
+      points: ["Implement Solution", "Iterate & Fine Tune"],
     },
     {
       label: "03",
       title: "Demo",
       Icon: Presentation,
-      points: ["Live Demonstration", "Continuous Iteration"],
+      points: ["Share Results & Learning", "Biggest Personal Takeaway"],
     },
   ];
 
@@ -441,7 +442,7 @@ function Slide1({ onExplore }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
-          whileHover={{ y: -3, scale: 1.02 }}
+          whileHover={{ y: -2 }}
           style={{
             position: "relative",
             zIndex: 2,
@@ -451,7 +452,7 @@ function Slide1({ onExplore }) {
             fontWeight: 700,
             display: "inline-flex",
             alignItems: "center",
-            gap: "12px",
+            gap: "10px",
             lineHeight: 1.2,
             padding: "6px 0",
             background: "transparent",
@@ -473,39 +474,6 @@ function Slide1({ onExplore }) {
             Philoneos
           </motion.span>
 
-          {/* Clean 'x' symbol without circle background */}
-          <motion.span
-            whileHover={{ scale: 1.4, rotate: 180 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 350, damping: 15 }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#FF3F50",
-              fontSize: "18px",
-              fontWeight: 800,
-              fontFamily: "GT America Mono, sans-serif",
-              padding: "0 2px",
-              lineHeight: 1,
-            }}
-          >
-            x
-          </motion.span>
-
-          {/* ScaleTech brand name */}
-          <motion.span
-            whileHover={{ color: "#FF3F50", scale: 1.04 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            style={{
-              letterSpacing: "-0.02em",
-              color: "#111111",
-              transition: "color 200ms ease",
-            }}
-          >
-            ScaleTech
-          </motion.span>
-
           {/* Interactive Handshake icon */}
           <motion.div
             whileHover={{ scale: 1.3, rotate: [0, -15, 15, -10, 0] }}
@@ -518,7 +486,7 @@ function Slide1({ onExplore }) {
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              marginLeft: "4px",
+              margin: "0 2px",
             }}
           >
             <Handshake
@@ -528,6 +496,69 @@ function Slide1({ onExplore }) {
               style={{ flexShrink: 0 }}
             />
           </motion.div>
+
+          {/* ScaleTech brand name */}
+          <motion.span
+            whileHover={{ color: "#25ADD0", scale: 1.04 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            style={{
+              letterSpacing: "-0.02em",
+              color: "#111111",
+              transition: "color 200ms ease",
+            }}
+          >
+            ScaleTech
+          </motion.span>
+
+          {/* Interactive Emoji Group */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              marginLeft: "4px",
+            }}
+          >
+            <motion.span
+              whileHover={{ scale: 1.35, rotate: [0, -12, 12, 0] }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src="https://emoji.slack-edge.com/TBGLX779R/everythings_fine_parrot/acf4d3783f4a3726.gif"
+                alt="Everything's fine parrot"
+                style={{ width: "22px", height: "22px", objectFit: "contain" }}
+              />
+            </motion.span>
+
+            <motion.span
+              whileHover={{ y: -5, scale: 1.35, rotate: 15 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              style={{
+                display: "inline-flex",
+                fontSize: "20px",
+                lineHeight: 1,
+              }}
+            >
+              🚀
+            </motion.span>
+
+            <motion.span
+              whileHover={{ scale: 1.35, rotate: -18 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              style={{
+                display: "inline-flex",
+                fontSize: "20px",
+                lineHeight: 1,
+              }}
+            >
+              🎉
+            </motion.span>
+          </div>
         </motion.div>
 
         {/* Horizontal divider above Our Vision — full width, extending out of padding */}
@@ -545,31 +576,92 @@ function Slide1({ onExplore }) {
             marginLeft: "-80px",
           }}
         />
-
-        {/* Our Vision — editorial callout: a single thin red accent line hanging in the margin; text sits on the column grid, aligned with the statement above */}
-        <motion.div
-          className="slide1-vision"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
-          style={{
-            background: "transparent",
-            marginTop: "30px",
-            marginLeft: "-20px",
-            padding: "0 32px 0 18px",
-            borderLeft: "2px solid var(--accent-purple)",
-            maxWidth: "580px",
-          }}
-        >
-          <div className="text-small-label" style={{ marginBottom: "12px" }}>
-            VISION
-          </div>
-          <p className="text-body">
-            To enable participants to explore, experiment, implement AI
-            integrated solution that create meaningful value for Philoneos as an
-            organization, for Philoneos customers or your side gig.
-          </p>
-        </motion.div>
+        <div style={{ width: "100%" }}>
+          {/* Our Vision — editorial callout: a single thin red accent line hanging in the margin; text sits on the column grid, aligned with the statement above */}
+          <motion.div
+            className="slide1-vision"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
+            style={{
+              background: "transparent",
+              marginTop: "20px",
+              marginLeft: "-20px",
+              padding: "0 32px 0 18px",
+              borderLeft: "2px solid var(--accent-purple)",
+              maxWidth: "580px",
+            }}
+          >
+            <div className="heading-text" style={{ marginBottom: "12px" }}>
+              CHALLENGE
+            </div>
+            <p className="content-detail-para">
+              Build smallest ever use case you can think of with AI that can be
+              tested immediately together.
+            </p>
+          </motion.div>
+          <motion.div
+            className="slide1-vision"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
+            style={{
+              background: "transparent",
+              marginTop: "20px",
+              marginLeft: "-20px",
+              padding: "0 32px 0 18px",
+              borderLeft: "2px solid var(--accent-purple)",
+              maxWidth: "580px",
+            }}
+          >
+            <div className="heading-text" style={{ marginBottom: "12px" }}>
+              SCOPE
+            </div>
+            <p className="content-detail-para">
+              #Organisation <br />
+              #Customer <br />
+              #New-possibilities
+            </p>
+          </motion.div>
+          <motion.div
+            className="slide1-vision"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
+            style={{
+              background: "transparent",
+              marginTop: "20px",
+              marginLeft: "-20px",
+              padding: "0 32px 0 18px",
+              borderLeft: "2px solid var(--accent-purple)",
+              maxWidth: "580px",
+            }}
+          >
+            <div className="heading-text" style={{ marginBottom: "12px" }}>
+              TIMELINE
+            </div>
+            <p className="content-detail-para">4-6 weeks</p>
+          </motion.div>
+          <motion.div
+            className="slide1-vision"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
+            style={{
+              background: "transparent",
+              marginTop: "20px",
+              marginLeft: "-20px",
+              padding: "0 32px 0 18px",
+              borderLeft: "2px solid var(--accent-purple)",
+              maxWidth: "580px",
+            }}
+          >
+            <div className="heading-text" style={{ marginBottom: "12px" }}>
+              REWARD
+            </div>
+            <p className="content-detail-para">#TBD</p>
+          </motion.div>
+        </div>
 
         {/* Assessment details & Start Survey button */}
         {/* <motion.div
@@ -817,7 +909,9 @@ function Slide1({ onExplore }) {
           </div>
 
           {/* Section 2: the rotating insight carousel, unchanged */}
-          <div style={{ maxWidth: "520px", position: "relative" }}>
+          <div
+            style={{ maxWidth: "520px", position: "relative", height: "250px" }}
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeOverlaySlide}
