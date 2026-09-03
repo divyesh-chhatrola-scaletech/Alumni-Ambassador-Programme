@@ -259,23 +259,20 @@ function Slide1({ onExplore }) {
     {
       label: "01",
       title: "Discover",
-      subtitle: "Building the right Idea",
       Icon: Compass,
-      points: ["Submit your idea", "Evaluations by Steering Committee"],
+      points: ["Idea Submission & Evaluation", "Team Formation"],
     },
     {
       label: "02",
-      title: "Identify",
-      subtitle: "Learning through experimentation",
-      Icon: Search,
-      points: ["Hands-on POC AI workshops", "AI Agent Creation Labs"],
+      title: "Implement",
+      Icon: Rocket,
+      points: ["Build practical AI use cases", "Peer knowledge sharing"],
     },
     {
       label: "03",
-      title: "Implement",
-      subtitle: "Turning ideas into real impact",
-      Icon: Rocket,
-      points: ["Build practical AI solutions", "Live demonstrations"],
+      title: "Demo",
+      Icon: Presentation,
+      points: ["Live Demonstration", "Continuous Iteration"],
     },
   ];
 
@@ -439,33 +436,99 @@ function Slide1({ onExplore }) {
           With AI
         </motion.h1>
 
-        <motion.p
+        <motion.div
           className="slide1-subtitle"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
+          whileHover={{ y: -3, scale: 1.02 }}
           style={{
             position: "relative",
             zIndex: 2,
-            maxWidth: "580px",
+            maxWidth: "max-content",
             marginBottom: "64px",
-            fontSize: "20px",
-            color: "#2F2F2F",
-            fontWeight: 500,
-            display: "flex",
+            fontSize: "22px",
+            fontWeight: 700,
+            display: "inline-flex",
             alignItems: "center",
-            gap: "10px",
+            gap: "12px",
             lineHeight: 1.2,
+            padding: "6px 0",
+            background: "transparent",
+            cursor: "pointer",
+            userSelect: "none",
+            transition: "all 300ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
-          <span>Philoneos meets ScaleTech</span>
-          <Handshake
-            size={24}
-            color="#FF3F50"
-            strokeWidth={1.8}
-            style={{ flexShrink: 0 }}
-          />
-        </motion.p>
+          {/* Philoneos brand name */}
+          <motion.span
+            whileHover={{ color: "#FF3F50", scale: 1.04 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            style={{
+              letterSpacing: "-0.02em",
+              color: "#111111",
+              transition: "color 200ms ease",
+            }}
+          >
+            Philoneos
+          </motion.span>
+
+          {/* Clean 'x' symbol without circle background */}
+          <motion.span
+            whileHover={{ scale: 1.4, rotate: 180 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 350, damping: 15 }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#FF3F50",
+              fontSize: "18px",
+              fontWeight: 800,
+              fontFamily: "GT America Mono, sans-serif",
+              padding: "0 2px",
+              lineHeight: 1,
+            }}
+          >
+            x
+          </motion.span>
+
+          {/* ScaleTech brand name */}
+          <motion.span
+            whileHover={{ color: "#FF3F50", scale: 1.04 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            style={{
+              letterSpacing: "-0.02em",
+              color: "#111111",
+              transition: "color 200ms ease",
+            }}
+          >
+            ScaleTech
+          </motion.span>
+
+          {/* Interactive Handshake icon */}
+          <motion.div
+            whileHover={{ scale: 1.3, rotate: [0, -15, 15, -10, 0] }}
+            animate={{ scale: [1, 1.15, 1], y: [0, -2, 0] }}
+            transition={{
+              animate: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+              whileHover: { duration: 0.4 },
+            }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginLeft: "4px",
+            }}
+          >
+            <Handshake
+              size={24}
+              color="#FF3F50"
+              strokeWidth={2}
+              style={{ flexShrink: 0 }}
+            />
+          </motion.div>
+        </motion.div>
 
         {/* Horizontal divider above Our Vision — full width, extending out of padding */}
         <motion.div
@@ -712,17 +775,6 @@ function Slide1({ onExplore }) {
                   }}
                 >
                   {stage.title}
-                </div>
-
-                <div
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: 600,
-                    color: "#ffffff",
-                    lineHeight: 1.35,
-                  }}
-                >
-                  {stage.subtitle}
                 </div>
 
                 <ul
