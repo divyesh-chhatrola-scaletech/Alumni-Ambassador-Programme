@@ -629,7 +629,7 @@ function Slide1({ onExplore }) {
               </div>
               <p className="content-detail-para">
                 Build smallest ever use case you can think of with AI that can
-                be tested immediately.
+                be Adopted.
               </p>
             </motion.div>
 
@@ -967,9 +967,9 @@ function Slide1({ onExplore }) {
             ))}
           </div>
 
-          {/* Section 2: the rotating insight carousel, unchanged */}
+          {/* Section 2: the rotating insight carousel */}
           <div
-            style={{ maxWidth: "520px", position: "relative", height: "250px" }}
+            style={{ maxWidth: "520px", position: "relative", minHeight: "160px" }}
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -985,7 +985,7 @@ function Slide1({ onExplore }) {
                     fontSize: "14px",
                     letterSpacing: "2px",
                     color: "#FF3F50",
-                    marginBottom: "24px",
+                    marginBottom: "16px",
                   }}
                 >
                   {overlaySlides[activeOverlaySlide].label}
@@ -995,12 +995,12 @@ function Slide1({ onExplore }) {
                   className="slide1-carousel-headline"
                   style={{
                     fontFamily: "GT America Bold, sans-serif",
-                    fontSize: "30px",
+                    fontSize: "28px",
                     color: "white",
-                    lineHeight: 1.15,
+                    lineHeight: 1.18,
                     letterSpacing: "-0.02em",
                     maxWidth: "480px",
-                    marginBottom: "24px",
+                    marginBottom: "16px",
                     fontWeight: "bold",
                     textTransform: "initial",
                   }}
@@ -1029,62 +1029,60 @@ function Slide1({ onExplore }) {
               </motion.div>
             </AnimatePresence>
           </div>
-        </div>
 
-        {/* Bottom Indicator */}
-        <div
-          className="slide1-carousel-indicator"
-          style={{
-            position: "absolute",
-            bottom: "40px",
-            left: "70px",
-            display: "flex",
-            gap: "12px",
-            alignItems: "center",
-            fontFamily: "GT America Mono, monospace",
-            fontSize: "18px",
-            fontWeight: "bold",
-            letterSpacing: "2px",
-            zIndex: 2,
-          }}
-        >
-          {overlaySlides.map((slide, index) => (
-            <React.Fragment key={slide.label}>
-              <motion.span
-                role="button"
-                tabIndex={0}
-                aria-label={`Show insight ${slide.label}`}
-                aria-current={activeOverlaySlide === index}
-                onClick={() => setActiveOverlaySlide(index)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setActiveOverlaySlide(index);
-                  }
-                }}
-                animate={{
-                  color:
-                    activeOverlaySlide === index
-                      ? "#FF3F50"
-                      : "rgba(255,255,255,0.7)",
-                }}
-                whileHover={{ color: "#FF3F50", y: -2 }}
-                whileTap={{ scale: 0.94 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  cursor: "pointer",
-                  padding: "4px 6px",
-                  userSelect: "none",
-                  outline: "none",
-                }}
-              >
-                {slide.label}
-              </motion.span>
-              {index < overlaySlides.length - 1 && (
-                <span style={{ color: "rgba(255,255,255,0.7)" }}>—</span>
-              )}
-            </React.Fragment>
-          ))}
+          {/* Carousel Bottom Indicator - positioned in-flow to prevent overlap */}
+          <div
+            className="slide1-carousel-indicator"
+            style={{
+              display: "flex",
+              gap: "12px",
+              alignItems: "center",
+              fontFamily: "GT America Mono, monospace",
+              fontSize: "18px",
+              fontWeight: "bold",
+              letterSpacing: "2px",
+              marginTop: "28px",
+              zIndex: 3,
+            }}
+          >
+            {overlaySlides.map((slide, index) => (
+              <React.Fragment key={slide.label}>
+                <motion.span
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Show insight ${slide.label}`}
+                  aria-current={activeOverlaySlide === index}
+                  onClick={() => setActiveOverlaySlide(index)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActiveOverlaySlide(index);
+                    }
+                  }}
+                  animate={{
+                    color:
+                      activeOverlaySlide === index
+                        ? "#FF3F50"
+                        : "rgba(255,255,255,0.7)",
+                  }}
+                  whileHover={{ color: "#FF3F50", y: -2 }}
+                  whileTap={{ scale: 0.94 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    cursor: "pointer",
+                    padding: "4px 6px",
+                    userSelect: "none",
+                    outline: "none",
+                  }}
+                >
+                  {slide.label}
+                </motion.span>
+                {index < overlaySlides.length - 1 && (
+                  <span style={{ color: "rgba(255,255,255,0.7)" }}>—</span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       </div>
     </div>

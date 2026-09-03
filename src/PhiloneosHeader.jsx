@@ -100,6 +100,7 @@ export default function PhiloneosHeader({
           }}
         >
           <motion.span
+            className="app-header-center-text"
             animate={{
               color: labelHovered ? "#FF3F50" : "#111111",
               letterSpacing: labelHovered ? "2px" : "1.2px",
@@ -137,11 +138,14 @@ export default function PhiloneosHeader({
 
       {/* Right Action: ScaleTech mark */}
       <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-        <motion.img
+        <img
           src="/scaletech-logo.svg"
           alt="ScaleTech Logo"
-          className="philoneos-logo-img"
-          animate={{ scale: markHovered ? 1.06 : 1, opacity: markHovered ? 1 : 0.85 }}
+          className="scaletech-logo-img"
+          animate={{
+            scale: markHovered ? 1.06 : 1,
+            opacity: markHovered ? 1 : 0.85,
+          }}
           transition={{ duration: 0.25, ease: "easeOut" }}
           style={{
             height: "40px",

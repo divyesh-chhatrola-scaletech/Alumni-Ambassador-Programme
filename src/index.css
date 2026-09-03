@@ -201,3 +201,147 @@ button {
 .spin-icon {
   animation: spin 1s linear infinite;
 }
+
+.scaletech-logo-img {
+  height: 40px;
+  width: auto;
+  padding: 0 20px;
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM (MOBILE, TABLET, DESKTOP)
+   ========================================================================== */
+
+/* Tablet & Mobile Screens (< 1024px) */
+@media (max-width: 1024px) {
+  html,
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #root {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
+
+  .main-app-container {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+    flex-direction: column !important;
+  }
+
+  .slide1-left-panel {
+    width: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 84px 36px 40px 36px !important;
+    overflow-y: visible !important;
+  }
+
+  .slide1-right-panel {
+    width: 100% !important;
+    position: relative !important;
+    top: 0 !important;
+    right: 0 !important;
+    height: auto !important;
+    min-height: 520px !important;
+  }
+
+  .slide1-carousel-container {
+    padding: 48px 36px !important;
+  }
+
+  .app-header {
+    padding: 0 24px !important;
+  }
+
+  .philoneos-logo-wrapper {
+    padding-right: 24px !important;
+  }
+}
+
+/* Smartphone Screens (< 768px) */
+@media (max-width: 768px) {
+  .slide1-left-panel {
+    padding: 72px 20px 32px 20px !important;
+  }
+
+  .slide1-title {
+    font-size: clamp(34px, 8.5vw, 54px) !important;
+    line-height: 1.08 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .slide1-subtitle {
+    font-size: clamp(15px, 4vw, 18px) !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .slide1-divider {
+    width: calc(100% + 40px) !important;
+    margin-left: -20px !important;
+    margin-top: 24px !important;
+  }
+
+  .slide1-vision {
+    margin-left: 0 !important;
+    padding: 0 0 0 14px !important;
+  }
+
+  .slide1-carousel-container {
+    padding: 32px 18px !important;
+  }
+
+  .app-header {
+    height: 56px !important;
+    padding: 0 0 0 16px !important;
+  }
+
+  .app-header-center-text {
+    font-size: 13px !important;
+    letter-spacing: 0.8px !important;
+  }
+
+  .content-detail-para {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  .text-card-desc {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+
+  .heading-md {
+    font-size: 28px !important;
+  }
+
+  .heading-lg {
+    font-size: 38px !important;
+  }
+}
+
+/* Small Smartphone Screens (< 480px) */
+@media (max-width: 480px) {
+  .app-header-center-text {
+    display: none !important;
+  }
+
+  .slide1-right-panel {
+    min-height: 440px !important;
+  }
+
+  .slide1-carousel-container {
+    padding: 24px 14px !important;
+  }
+
+  .slide1-left-panel {
+    padding: 68px 16px 28px 16px !important;
+  }
+}

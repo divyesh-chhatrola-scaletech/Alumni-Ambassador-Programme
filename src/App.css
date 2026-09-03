@@ -223,7 +223,7 @@
 }
 
 .philoneos-nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -389,8 +389,12 @@
     z-index: 100 !important;
   }
 
-  .app-header img {
-    height: 20px !important; /* Scaled Philoneos logo height for mobile */
+  .scaletech-logo-img {
+    height: 28px !important;
+  }
+
+  .philoneos-logo-img {
+    height: 16px !important; /* Scaled Philoneos logo height for mobile */
     margin-top: 0 !important;
   }
 
