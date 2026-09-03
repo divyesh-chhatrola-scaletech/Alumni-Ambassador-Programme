@@ -152,9 +152,9 @@ button {
 }
 
 .content-detail-para {
-  font-size: clamp(14px, 1.15vw, 15px);
+  font-size: clamp(18px, 1.15vw, 22px);
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.6;
   color: #2f2f2f;
 }
 
@@ -174,7 +174,7 @@ button {
 }
 
 .heading-text {
-  font-size: clamp(15px, 1vw, 16px);
+  font-size: clamp(16px, 1vw, 17px);
   font-weight: 700;
   letter-spacing: 0.12em;
   color: #ff3f50;

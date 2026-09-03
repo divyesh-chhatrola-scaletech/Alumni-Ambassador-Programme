@@ -361,7 +361,7 @@ function Slide1({ onExplore }) {
         ))}
       </div>
 
-      {/* Left Content Area (46%) — single editorial column, vertically centred below the header */}
+      {/* Left Content Area (46%) — single editorial column, vertically centered */}
       <div
         className="slide1-left-panel"
         style={{
@@ -371,7 +371,7 @@ function Slide1({ onExplore }) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          padding: "64px 60px 40px 80px",
+          padding: "80px 60px 40px 80px",
           zIndex: 3,
           overflow: "hidden",
         }}
@@ -416,251 +416,310 @@ function Slide1({ onExplore }) {
           />
         </div>
 
-        <motion.h1
-          className="slide1-title"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
+        {/* Vertically Centered Content Wrapper */}
+        <div
           style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            width: "100%",
+            margin: "auto 0",
             position: "relative",
             zIndex: 2,
-            fontSize: "79px",
-            lineHeight: 1.1,
-            fontWeight: 900,
-            textTransform: "uppercase",
-            color: "#111111",
-            marginBottom: "16px",
-            letterSpacing: "-0.04em",
           }}
         >
-          Create <span style={{ color: "var(--accent-purple)" }}>Value</span>{" "}
-          With AI
-        </motion.h1>
-
-        <motion.div
-          className="slide1-subtitle"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
-          whileHover={{ y: -2 }}
-          style={{
-            position: "relative",
-            zIndex: 2,
-            maxWidth: "max-content",
-            marginBottom: "64px",
-            fontSize: "22px",
-            fontWeight: 700,
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "10px",
-            lineHeight: 1.2,
-            padding: "6px 0",
-            background: "transparent",
-            cursor: "pointer",
-            userSelect: "none",
-            transition: "all 300ms cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        >
-          {/* Philoneos brand name */}
-          <motion.span
-            whileHover={{ color: "#FF3F50", scale: 1.04 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          <motion.h1
+            className="slide1-title"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.6 }}
             style={{
-              letterSpacing: "-0.02em",
+              position: "relative",
+              zIndex: 2,
+              fontSize: "79px",
+              lineHeight: 1.1,
+              fontWeight: 900,
+              textTransform: "uppercase",
               color: "#111111",
-              transition: "color 200ms ease",
+              marginBottom: "16px",
+              letterSpacing: "-0.04em",
             }}
           >
-            Philoneos
-          </motion.span>
+            Create <span style={{ color: "var(--accent-purple)" }}>Value</span>{" "}
+            With AI
+          </motion.h1>
 
-          {/* Interactive Handshake icon */}
           <motion.div
-            whileHover={{ scale: 1.3, rotate: [0, -15, 15, -10, 0] }}
-            animate={{ scale: [1, 1.15, 1], y: [0, -2, 0] }}
-            transition={{
-              animate: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-              whileHover: { duration: 0.4 },
-            }}
+            className="slide1-subtitle"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.8 }}
+            whileHover={{ y: -2 }}
             style={{
+              position: "relative",
+              zIndex: 2,
+              maxWidth: "max-content",
+              marginBottom: "28px",
+              fontSize: "22px",
+              fontWeight: 700,
               display: "inline-flex",
               alignItems: "center",
-              justifyContent: "center",
-              margin: "0 2px",
+              gap: "10px",
+              lineHeight: 1.2,
+              padding: "6px 0",
+              background: "transparent",
+              cursor: "pointer",
+              userSelect: "none",
+              transition: "all 300ms cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            <Handshake
-              size={24}
-              color="#FF3F50"
-              strokeWidth={2}
-              style={{ flexShrink: 0 }}
-            />
-          </motion.div>
-
-          {/* ScaleTech brand name */}
-          <motion.span
-            whileHover={{ color: "#25ADD0", scale: 1.04 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            style={{
-              letterSpacing: "-0.02em",
-              color: "#111111",
-              transition: "color 200ms ease",
-            }}
-          >
-            ScaleTech
-          </motion.span>
-
-          {/* Interactive Emoji Group */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              marginLeft: "4px",
-            }}
-          >
+            {/* Philoneos brand name */}
             <motion.span
-              whileHover={{ scale: 1.35, rotate: [0, -12, 12, 0] }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              whileHover={{ color: "#FF3F50", scale: 1.04 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              style={{
+                letterSpacing: "-0.02em",
+                color: "#111111",
+                transition: "color 200ms ease",
+              }}
+            >
+              Philoneos
+            </motion.span>
+
+            {/* Interactive Handshake icon */}
+            <motion.div
+              whileHover={{ scale: 1.3, rotate: [0, -15, 15, -10, 0] }}
+              animate={{ scale: [1, 1.15, 1], y: [0, -2, 0] }}
+              transition={{
+                animate: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+                whileHover: { duration: 0.4 },
+              }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
+                margin: "0 2px",
               }}
             >
-              <img
-                src="https://emoji.slack-edge.com/TBGLX779R/everythings_fine_parrot/acf4d3783f4a3726.gif"
-                alt="Everything's fine parrot"
-                style={{ width: "22px", height: "22px", objectFit: "contain" }}
+              <Handshake
+                size={24}
+                color="#FF3F50"
+                strokeWidth={2}
+                style={{ flexShrink: 0 }}
               />
-            </motion.span>
+            </motion.div>
 
+            {/* ScaleTech brand name */}
             <motion.span
-              whileHover={{ y: -5, scale: 1.35, rotate: 15 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              whileHover={{ color: "#25ADD0", scale: 1.04 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
               style={{
-                display: "inline-flex",
-                fontSize: "20px",
-                lineHeight: 1,
+                letterSpacing: "-0.02em",
+                color: "#111111",
+                transition: "color 200ms ease",
               }}
             >
-              🚀
+              ScaleTech
             </motion.span>
 
-            <motion.span
-              whileHover={{ scale: 1.35, rotate: -18 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            {/* Interactive Emoji Group */}
+            <div
               style={{
                 display: "inline-flex",
-                fontSize: "20px",
-                lineHeight: 1,
+                alignItems: "center",
+                gap: "6px",
+                marginLeft: "4px",
               }}
             >
-              🎉
-            </motion.span>
+              <motion.span
+                whileHover={{ scale: 1.35, rotate: [0, -12, 12, 0] }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <img
+                  src="https://emoji.slack-edge.com/TBGLX779R/everythings_fine_parrot/acf4d3783f4a3726.gif"
+                  alt="Everything's fine parrot"
+                  style={{
+                    width: "22px",
+                    height: "22px",
+                    objectFit: "contain",
+                  }}
+                />
+              </motion.span>
+
+              <motion.span
+                whileHover={{ y: -5, scale: 1.35, rotate: 15 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                style={{
+                  display: "inline-flex",
+                  fontSize: "20px",
+                  lineHeight: 1,
+                }}
+              >
+                🚀
+              </motion.span>
+
+              <motion.span
+                whileHover={{ scale: 1.35, rotate: -18 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                style={{
+                  display: "inline-flex",
+                  fontSize: "20px",
+                  lineHeight: 1,
+                }}
+              >
+                🎉
+              </motion.span>
+            </div>
+          </motion.div>
+
+          {/* Horizontal divider line */}
+          <motion.div
+            className="slide1-divider"
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.9 }}
+            style={{
+              width: "calc(100% + 140px)",
+              height: "1px",
+              background: "#111111",
+              transformOrigin: "left",
+              marginTop: "120px",
+              marginLeft: "-80px",
+              zIndex: 4,
+            }}
+          />
+          <div
+            style={{
+              width: "100%",
+              marginTop: "24px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+            }}
+          >
+            {/* CHALLENGE - Coral Red */}
+            <motion.div
+              className="slide1-vision"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1],
+                delay: 0.95,
+              }}
+              style={{
+                background: "transparent",
+                marginLeft: "-20px",
+                padding: "0 32px 0 18px",
+                borderLeft: "2px solid #FF3F50",
+                maxWidth: "580px",
+                marginBottom: "16px",
+              }}
+            >
+              <div
+                className="heading-text"
+                style={{ marginBottom: "8px", color: "#FF3F50" }}
+              >
+                CHALLENGE
+              </div>
+              <p className="content-detail-para">
+                Build smallest ever use case you can think of with AI that can
+                be tested immediately.
+              </p>
+            </motion.div>
+
+            {/* SCOPE - Cyan / ScaleTech Blue */}
+            <motion.div
+              className="slide1-vision"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1],
+                delay: 1.0,
+              }}
+              style={{
+                background: "transparent",
+                marginLeft: "-20px",
+                padding: "0 32px 0 18px",
+                borderLeft: "2px solid #25ADD0",
+                maxWidth: "580px",
+                marginBottom: "16px",
+              }}
+            >
+              <div
+                className="heading-text"
+                style={{ marginBottom: "8px", color: "#25ADD0" }}
+              >
+                SCOPE
+              </div>
+              <p className="content-detail-para">
+                #Organisation <br />
+                #Customer <br />
+                #New-possibilities
+              </p>
+            </motion.div>
+
+            {/* TIMELINE - Warm Amber Gold */}
+            <motion.div
+              className="slide1-vision"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1],
+                delay: 1.05,
+              }}
+              style={{
+                background: "transparent",
+                marginLeft: "-20px",
+                padding: "0 32px 0 18px",
+                borderLeft: "2px solid #F5A623",
+                maxWidth: "580px",
+                marginBottom: "16px",
+              }}
+            >
+              <div
+                className="heading-text"
+                style={{ marginBottom: "8px", color: "#F5A623" }}
+              >
+                TIMELINE
+              </div>
+              <p className="content-detail-para">4-6 weeks</p>
+            </motion.div>
+
+            {/* REWARD - Emerald Green */}
+            <motion.div
+              className="slide1-vision"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                ease: [0.22, 1, 0.36, 1],
+                delay: 1.1,
+              }}
+              style={{
+                background: "transparent",
+                marginLeft: "-20px",
+                padding: "0 32px 0 18px",
+                borderLeft: "2px solid #10B981",
+                maxWidth: "580px",
+              }}
+            >
+              <div
+                className="heading-text"
+                style={{ marginBottom: "8px", color: "#10B981" }}
+              >
+                REWARD
+              </div>
+              <p className="content-detail-para">#TBD</p>
+            </motion.div>
           </div>
-        </motion.div>
-
-        {/* Horizontal divider above Our Vision — full width, extending out of padding */}
-        <motion.div
-          className="slide1-divider"
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.9 }}
-          style={{
-            width: "calc(100% + 140px)",
-            height: "1px",
-            background: "#111111",
-            transformOrigin: "left",
-            marginTop: "0px",
-            marginLeft: "-80px",
-          }}
-        />
-        <div style={{ width: "100%" }}>
-          {/* Our Vision — editorial callout: a single thin red accent line hanging in the margin; text sits on the column grid, aligned with the statement above */}
-          <motion.div
-            className="slide1-vision"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
-            style={{
-              background: "transparent",
-              marginTop: "20px",
-              marginLeft: "-20px",
-              padding: "0 32px 0 18px",
-              borderLeft: "2px solid var(--accent-purple)",
-              maxWidth: "580px",
-            }}
-          >
-            <div className="heading-text" style={{ marginBottom: "12px" }}>
-              CHALLENGE
-            </div>
-            <p className="content-detail-para">
-              Build smallest ever use case you can think of with AI that can be
-              tested immediately together.
-            </p>
-          </motion.div>
-          <motion.div
-            className="slide1-vision"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
-            style={{
-              background: "transparent",
-              marginTop: "20px",
-              marginLeft: "-20px",
-              padding: "0 32px 0 18px",
-              borderLeft: "2px solid var(--accent-purple)",
-              maxWidth: "580px",
-            }}
-          >
-            <div className="heading-text" style={{ marginBottom: "12px" }}>
-              SCOPE
-            </div>
-            <p className="content-detail-para">
-              #Organisation <br />
-              #Customer <br />
-              #New-possibilities
-            </p>
-          </motion.div>
-          <motion.div
-            className="slide1-vision"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
-            style={{
-              background: "transparent",
-              marginTop: "20px",
-              marginLeft: "-20px",
-              padding: "0 32px 0 18px",
-              borderLeft: "2px solid var(--accent-purple)",
-              maxWidth: "580px",
-            }}
-          >
-            <div className="heading-text" style={{ marginBottom: "12px" }}>
-              TIMELINE
-            </div>
-            <p className="content-detail-para">4-6 weeks</p>
-          </motion.div>
-          <motion.div
-            className="slide1-vision"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 1.0 }}
-            style={{
-              background: "transparent",
-              marginTop: "20px",
-              marginLeft: "-20px",
-              padding: "0 32px 0 18px",
-              borderLeft: "2px solid var(--accent-purple)",
-              maxWidth: "580px",
-            }}
-          >
-            <div className="heading-text" style={{ marginBottom: "12px" }}>
-              REWARD
-            </div>
-            <p className="content-detail-para">#TBD</p>
-          </motion.div>
         </div>
 
         {/* Assessment details & Start Survey button */}
